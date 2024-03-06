@@ -3,7 +3,6 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { ArrowUpIcon, ArrowDownIcon, DashIcon } from "@radix-ui/react-icons";
-import { Skeleton } from "./components/ui/skeleton";
 // import YoutubeVideo from "./YoutubeVideo";
 
 const YoutubeVideo = lazy(() => import('./YoutubeVideo'));
@@ -79,7 +78,7 @@ const RankingItem = ({ item : props }: RankingItemProps) => {
         </div>
       </CardContent>
       {showVideo && (
-          <Suspense fallback={<Skeleton className="h-4 w-[250px]" />}>
+          <Suspense fallback={<p className="text-left text-sm m-2 text-muted-foreground">Loading...</p>}>
             <CardFooter>
               <div className="m-auto">
           <YoutubeVideo videoId={props.youtube_video_id} width={500} height={300} />
