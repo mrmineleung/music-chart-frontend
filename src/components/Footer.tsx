@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-// import YouTubePlayer, { YouTubePlayerType } from "./YouTubePlayer"
 import ReactPlayer from "react-player/lazy";
 import { Pause, Play, Shuffle, SkipForward, Square, Volume2, VolumeX } from "lucide-react";
 import { Button } from "./ui/button";
@@ -23,7 +22,6 @@ const Footer = () => {
   const [isMuted, setIsMuted] = useState<boolean>(false);
   const [isSeeking, setIsSeeking] = useState<boolean>(false);
   const [played, setPlayed] = useState<number>(0);
-  // const [progress, setProgress] = useState<OnProgressProps>()
   const [duration, setDuration] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState<number>(0);
 
@@ -95,13 +93,10 @@ const Footer = () => {
     setIsPlaying(!isPlaying);
   };
 
-  // const handleVolumeChange = e => {
-  //     setVolume(parseFloat(e.target.value))
-  //   }
 
-  const handleVolumeValueChange = (value: string) => {
-    console.log(value);
-    setVolume(parseFloat(value));
+  const handleVolumeValueChange = (value: unknown) => {
+    // console.log(value);
+    setVolume(parseFloat(value as string));
   };
 
   const handleToggleMuted = () => {
@@ -111,23 +106,16 @@ const Footer = () => {
     setIsSeeking(true);
   };
 
-  // const handleSeekChange = e => {
-  //     setPlayed(parseFloat(e.target.value))
-  //   }
 
-  const handleSeekValueChange = (value: string) => {
-    setPlayed(parseFloat(value.toString()));
+  const handleSeekValueChange = (value: unknown) => {
+    setPlayed(parseFloat(value as string));
   };
 
   const handleSeekMouseUp = () => {
-    console.log("up ");
-    // console.log(e)
     setIsSeeking(false);
     player?.current?.seekTo(played);
   };
   const handleProgress = (state: OnProgressProps) => {
-    // console.log('onProgress', state)
-    // We only want to update time slider if we are not currently seeking
     setCurrentTime(player.current?.getCurrentTime || 0);
     if (!isSeeking) {
       setIsSeeking(true);
@@ -141,10 +129,6 @@ const Footer = () => {
         <button onClick={() => setIsHide(!isHide)}>
           {isHide ? "Show" : "Hide"}
         </button>
-        {/* <button onClick={() => setIsHide(!isHide)}>Close</button> */}
-        {/* <div className={`overflow-hidden ${isHide? 'hidden' : ''} max-h-24 max-w-24 self-end`}>
-    <YouTubePlayer id="PLnoeVSiQNDni53eTNBAr5U4zeEVfSLlzQ" type={YouTubePlayerType.PLAYLIST} width={500} height={300} ></YouTubePlayer>
-            </div> */}
         <div
           className={`${
             isHide ? "hidden" : ""
@@ -155,8 +139,6 @@ const Footer = () => {
             className={`react-player`}
             width="100%"
             height="100%"
-            //   url={'https://www.youtube.com/watch?v=TeA49K5oSYg'}
-            // url='https://www.youtube.com/watch?v=smdmEhkIRVc&list=PLnoeVSiQNDni53eTNBAr5U4zeEVfSLlzQ'
             url={
               nowPlaying
                 ? "https://www.youtube.com/watch?v=" +
@@ -164,17 +146,16 @@ const Footer = () => {
                 : ""
             }
             playing={isPlaying}
-            //   playbackRate={playbackRate}
             volume={volume}
             muted={isMuted}
             onReady={handleReady}
-            onStart={() => console.log("onStart")}
+            // onStart={() => console.log("onStart")}
             onPlay={handlePlay}
             onPause={handlePause}
             onEnded={handleEnded}
-            onBuffer={() => console.log("onBuffer")}
+            // onBuffer={() => console.log("onBuffer")}
             //   onPlaybackRateChange={this.handleOnPlaybackRateChange}
-            onSeek={(e) => console.log("onSeek", e)}
+            // onSeek={(e) => console.log("onSeek", e)}
             onError={(e) => console.log("onError", e)}
             onProgress={handleProgress}
             //   onDuration={this.handleDuration}
@@ -221,7 +202,6 @@ const Footer = () => {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            {/* <button onClick={handlePlayPause}>{isPlaying ? 'Pause' : 'Play'}</button> */}
             <div className="">
               <TooltipProvider>
                 <Tooltip>
@@ -286,8 +266,6 @@ const Footer = () => {
               </TooltipProvider>
             </div>
             <div className="">
-              {/* <input id='muted' type='checkbox' checked={isMuted} onChange={handleToggleMuted} /> */}
-              {/* <Checkbox id='muted' className="w-5 h-5" checked={isMuted} onCheckedChange={handleToggleMuted} /> */}
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger
@@ -320,14 +298,6 @@ const Footer = () => {
                 </Tooltip>
               </TooltipProvider>
             </div>
-            {/*                 
-            <input
-                    type='range' min={0} max={0.999999} step='any'
-                    value={played}
-                    onMouseDown={handleSeekMouseDown}
-                    onChange={handleSeekChange}
-                    onMouseUp={handleSeekMouseUp}
-                  /> */}
             <div className="flex flex-auto md:flex-none md:w-32 ">
               <Slider
                 defaultValue={[20]}
@@ -342,9 +312,6 @@ const Footer = () => {
               {convertSecondsToMinutes(currentTime)} /{" "}
               {convertSecondsToMinutes(duration)}
             </div>
-            {/* <div className="flex-none w-10 md:hidden">
-              {convertSecondsToMinutes(currentTime)}
-            </div> */}
             <div className="hidden md:flex md:flex-auto">
               <Slider
                 defaultValue={[0]}
@@ -356,14 +323,9 @@ const Footer = () => {
                 onPointerUp={handleSeekMouseUp}
               />
             </div>
-            {/* <input type='range' min={0} max={1} step='any' value={volume} onChange={handleVolumeChange} /> */}
           </div>
           <div className="flex items-center m-2 space-x-2 md:hidden">
           <span>{convertSecondsToMinutes(currentTime)}</span>
-          {/* <div className="flex flex-none w-28 ">
-              {convertSecondsToMinutes(currentTime)} /{" "}
-              {convertSecondsToMinutes(duration)}
-            </div> */}
             <div className="flex-auto">
               <Slider
                 defaultValue={[0]}
