@@ -12,11 +12,8 @@ const Ranking = ({ chart, result }: RankingProps) => {
   if (chart == "melon") {
     return (
       <>
-        {/* {result.map((item) => {
-          return <RankingItem key={item.rank} item={item} />;
-        })} */}
         <Virtuoso
-          className={`!h-[500px]`}
+          className="!h-[600px]"
           data={result}
           itemContent={(key, item) => <RankingItem key={key} item={item} />}
         />
@@ -27,9 +24,6 @@ const Ranking = ({ chart, result }: RankingProps) => {
   if (chart == "billboard") {
     return (
       <>
-        {/* {result.map((item) => {
-          return <BillboardRankingItem key={item.rank} item={item} />;
-        })} */}
         <Virtuoso
           className="!h-[600px]"
           data={result}
