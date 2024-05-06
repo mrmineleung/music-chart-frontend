@@ -6,6 +6,8 @@ const AboutUs = () => {
     mucha
   </span>
   <br/>
+  <br/>
+  <br/>
   <p>Nothing special...</p>
   </div>
   )

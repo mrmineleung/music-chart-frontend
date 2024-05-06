@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player/lazy";
-import { Pause, Play, Shuffle, SkipForward, Square, Volume2, VolumeX } from "lucide-react";
+import { ChevronDown, ChevronUp, Pause, Play, Shuffle, SkipForward, Square, Volume2, VolumeX } from "lucide-react";
 import { Button } from "./ui/button";
 import { Slider } from "./ui/slider";
 // import { Checkbox } from "./components/ui/checkbox"
@@ -14,6 +14,7 @@ import { OnProgressProps } from "react-player/base";
 import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
 import { usePlaylist } from "@/provider/PlaylistProvider";
+import { toast } from "./ui/use-toast";
 
 const Footer = () => {
   const [isHide, setIsHide] = useState<boolean>(false);
@@ -38,10 +39,11 @@ const Footer = () => {
         updateNowPlaying(head);
         updatePendingPlaylist(tail);
       }
+      setIsPlaying(true)
     };
 
     fetchNextSong();
-  }, [nowPlaying, pendingPlaylist, updateNowPlaying, updatePendingPlaylist]);
+  }, [nowPlaying, pendingPlaylist]);
 
   momentDurationFormatSetup(moment);
 
@@ -55,6 +57,8 @@ const Footer = () => {
     const [head, ...tail] = pendingPlaylist;
     updateNowPlaying(head);
     updatePendingPlaylist(tail);
+    } else {
+      handleStopPlaying();
     }
   }
 
@@ -71,6 +75,16 @@ const Footer = () => {
   const handleReady = () => {
     console.log("onReady");
     setIsPlaying(false);
+  };
+
+  const handleError = (e: unknown) => {
+    console.log("onError", e);
+    setIsPlaying(false);
+    handleNextSong();
+    if (e == 150) {
+    toast({title: "Video unavailable", 
+    description: "Playback on other websites has been disabled by the video owner"})
+    }
   };
 
   const handleEnded = () => {
@@ -126,9 +140,16 @@ const Footer = () => {
   return (
     <div className={`relative ${!nowPlaying ? "hidden" : ""}`}>
       <div className="fixed inset-x-0 bottom-32 md:bottom-24 left-0 right-0 w-72 md:w-[500px]">
-        <button onClick={() => setIsHide(!isHide)}>
+      <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setIsHide(!isHide)}
+                    >
+                        {isHide? <ChevronUp className="h-6 w-6" />:<ChevronDown className="h-6 w-6" />}
+                    </Button>
+        {/* <button onClick={() => setIsHide(!isHide)}>
           {isHide ? "Show" : "Hide"}
-        </button>
+        </button> */}
         <div
           className={`${
             isHide ? "hidden" : ""
@@ -156,7 +177,8 @@ const Footer = () => {
             // onBuffer={() => console.log("onBuffer")}
             //   onPlaybackRateChange={this.handleOnPlaybackRateChange}
             // onSeek={(e) => console.log("onSeek", e)}
-            onError={(e) => console.log("onError", e)}
+            // onError={(e) => console.log("onError", e)}
+            onError={(e) => handleError(e)}
             onProgress={handleProgress}
             //   onDuration={this.handleDuration}
             //   onPlaybackQualityChange={e => console.log('onPlaybackQualityChange', e)}

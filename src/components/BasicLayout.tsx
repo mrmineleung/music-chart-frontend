@@ -2,9 +2,20 @@ import { Outlet } from "react-router-dom";
 import AnimateIn from "./ui/animate-in";
 import ScrollToTopButton from "./ScrollToTopButton";
 import Header from "./Header";
+import { useAuth } from "@/provider/AuthProvider";
+import { useEffect } from "react";
 // import Footer from "./Footer";
 
 const BasicLayout = () => {
+  const { getCurrentUser } = useAuth();
+  
+  useEffect(() => {
+    const fetchUser = async () => {
+      await getCurrentUser();
+    };
+    fetchUser();
+  }, []);
+
   return (
     <>
     <Header />

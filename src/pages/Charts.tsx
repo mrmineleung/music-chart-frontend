@@ -6,7 +6,7 @@ import { CaretSortIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { usePlaylist } from "@/provider/PlaylistProvider";
-import { ListPlus, Play } from "lucide-react";
+import { Play } from "lucide-react";
 
 const Ranking = lazy(() => import("@/components/Ranking"));
 
@@ -57,17 +57,17 @@ const Charts = ({ ...props }: ChartsProps) => {
   const [isAscOrder, setIsAscOrder] = useState<boolean>(true);
 
   const {
-    updatePlaylist,
+    // updatePlaylist,
     updateNowPlaying,
     updatePendingPlaylist,
-    isOpenPlaylist,
-    setIsOpenPlaylist,
+    // isOpenPlaylist,
+    // setIsOpenPlaylist,
   } = usePlaylist();
 
-  const handleSaveAllToPlaylist = (playlist: RankingItemResponse[]) => {
-    updatePlaylist(playlist);
-    setIsOpenPlaylist(!isOpenPlaylist);
-  };
+  // const handleSaveAllToPlaylist = (playlist: RankingItemResponse[]) => {
+  //   updatePlaylist(playlist);
+  //   setIsOpenPlaylist(!isOpenPlaylist);
+  // };
 
   const params = useParams<ChartsParams>();
 
@@ -174,12 +174,12 @@ const Charts = ({ ...props }: ChartsProps) => {
           <Button onClick={() => handlePlayAll(rankingList)} variant="outline">
             <Play className="mr-2 h-4 w-4" /> Play all
           </Button>
-          <Button
+          {/* <Button
             onClick={() => handleSaveAllToPlaylist(rankingList)}
             variant="outline"
           >
             <ListPlus className="mr-2 h-4 w-4" /> Save all to playlist
-          </Button>
+          </Button> */}
           <Input
         type="text"
         placeholder="Search"

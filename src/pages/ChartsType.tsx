@@ -73,7 +73,7 @@ const ChartsType = () => {
       </h1>
       <div key={response?.chart} className="grid grid-cols-2 gap-2 content-stretch m-2">
         {response?.types.map(type => 
-          <Link key={type} to={`/charts/${response.chart.toLowerCase()}/types/${type.toLowerCase()}`}>
+          <Link key={type} to={`/charts/${response.chart.toLowerCase()}/types/${type.toLowerCase().replace(' ', '_')}`}>
           <div key={type} className={`border rounded-lg ${bgColorMapping.get(response.chart.toLowerCase())}`}>
             <div key={type} className="flex justify-center place-items-center rounded-lg h-32 transition-all hover:bg-accent/50 hover:text-accent-foreground duration-500">
               <span key={type} className="text-2xl md:text-3xl font-extrabold">{type}</span>

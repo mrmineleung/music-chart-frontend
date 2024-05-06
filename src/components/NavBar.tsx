@@ -82,6 +82,13 @@ const charts: { title: string; href: string; description: React.ReactNode }[] =
               </div>
             </div>
           </Link>
+          <Link key="TIKTOK TOP50" to="/charts/billboard/types/tiktok_top50">
+            <div className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg">
+              <div className="flex w-full h-full justify-center items-center">
+              TIKTOK TOP50
+              </div>
+            </div>
+          </Link>
         </div>
       ),
     },
@@ -150,7 +157,7 @@ const NavBar = () => {
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Link to="#">Explore</Link>
+              <Link to="/explore">Explore</Link>
             </NavigationMenuLink>
             {/* </Link> */}
           </NavigationMenuItem>

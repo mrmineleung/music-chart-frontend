@@ -2,20 +2,22 @@ import { ThemeProvider } from "@/provider/ThemeProvider";
 // import Header from "./components/Header";
 import Footer from "./components/Footer";
 import PlaylistProvider from "./provider/PlaylistProvider";
-import { BrowserRouter } from "react-router-dom";
-import MainRoutes from "./MainRoutes";
-
+import { RouterProvider } from "react-router-dom";
+import routes from "./MainRoutes";
+import AuthProvider from "./provider/AuthProvider";
+import { Toaster } from "@/components/ui/toaster";
 const App = () => {
   return (
     <>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        <PlaylistProvider>
-          <BrowserRouter>
+        <AuthProvider>
+          <PlaylistProvider>
             {/* <Header /> */}
-              <MainRoutes />
+            <RouterProvider router={routes} />
             <Footer />
-          </BrowserRouter>
-        </PlaylistProvider>
+            <Toaster />
+          </PlaylistProvider>
+        </AuthProvider>
       </ThemeProvider>
     </>
   );

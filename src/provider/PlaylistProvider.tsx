@@ -1,20 +1,22 @@
 import { RankingItemData } from "@/components/RankingItem";
 import { createContext, useContext, useState } from "react";
+import CryptoJS from 'crypto-js';
+import { Song } from "@/pages/UserPlaylist";
 
 interface PlaylistProviderProps {
   children: React.ReactNode;
 }
 
 interface PlaylistContextType {
-  playlist: RankingItemData[];
+  playlist: RankingItemData[] | Song[];
   // setPlaylist: React.Dispatch<React.SetStateAction<RankingItem[]>>;
-  updatePlaylist: (playlist: RankingItemData[]) => void;
-  nowPlaying: RankingItemData | null;
+  updatePlaylist: (playlist: RankingItemData[] | Song[]) => void;
+  nowPlaying: RankingItemData | Song | null;
   // setCurrentPlaying: React.Dispatch<React.SetStateAction<RankingItem | null>>;
-  updateNowPlaying: (song: RankingItemData | null) => void;
-  pendingPlaylist: RankingItemData[];
+  updateNowPlaying: (song: RankingItemData | Song | null) => void;
+  pendingPlaylist: (RankingItemData| Song)[];
   // setPendingPlay: React.Dispatch<React.SetStateAction<RankingItem[]>>;
-  updatePendingPlaylist: (playlist: RankingItemData[]) => void;
+  updatePendingPlaylist: (playlist: (RankingItemData | Song)[]) => void;
   isOpenPlaylist: boolean;
   setIsOpenPlaylist: React.Dispatch<React.SetStateAction<boolean>>;
   shuffle: <T,>(list:T[]) => T[]
@@ -50,16 +52,43 @@ const PlaylistProviderContext =
   createContext<PlaylistContextType>(playlistContextState);
 
 const PlaylistProvider = ({ children }: PlaylistProviderProps) => {
-  const [playlist, setPlaylist] = useState<RankingItemData[]>(
+  const SECRET_KEY = 'mysecretkey'; 
+
+  const encryptData =(name: string,data: unknown)=> {
+    const encrypted = CryptoJS.AES.encrypt(JSON.stringify(data), SECRET_KEY).toString();
+    localStorage.setItem(name, encrypted);
+    return encrypted
+  }
+
+  const decryptData = (name: string) => {
+    const encrypted = localStorage.getItem(name) || "";
+    const decrypted = CryptoJS.AES.decrypt(encrypted, SECRET_KEY).toString(CryptoJS.enc.Utf8);
+    if (decrypted) {
+      return JSON.parse(decrypted);
+    } else {
+      return null
+    }
+  }
+
+  const [playlist, setPlaylist] = useState<RankingItemData[] | Song[]>(
     JSON.parse(localStorage.getItem('playlist') as string) == null? [] : JSON.parse(localStorage.getItem('playlist') as string)
   );
 
-  const [nowPlaying, setNowPlaying] = useState<RankingItemData | null>(
-    JSON.parse(localStorage.getItem('nowPlaying') as string)
+  // const [nowPlaying, setNowPlaying] = useState<RankingItemData | null>(
+  //   JSON.parse(localStorage.getItem('nowPlaying') as string)
+  // );
+
+  const [nowPlaying, setNowPlaying] = useState<RankingItemData | Song | null>(
+    decryptData('nowPlaying') || null
   );
-  const [pendingPlaylist, setPendingPlaylist] = useState<RankingItemData[]>(
-    JSON.parse(localStorage.getItem('pendingPlaylist') as string) == null? [] : JSON.parse(localStorage.getItem('pendingPlaylist') as string)
-    );
+
+  // const [pendingPlaylist, setPendingPlaylist] = useState<RankingItemData[]>(
+  //   JSON.parse(localStorage.getItem('pendingPlaylist') as string) == null? [] : JSON.parse(localStorage.getItem('pendingPlaylist') as string)
+  //   );
+
+    const [pendingPlaylist, setPendingPlaylist] = useState<(RankingItemData | Song)[]>(
+      decryptData('pendingPlaylist') == null? [] : decryptData('pendingPlaylist')
+      );
 
   const [isOpenPlaylist, setIsOpenPlaylist] = useState<boolean>(false);
 
@@ -71,17 +100,21 @@ const PlaylistProvider = ({ children }: PlaylistProviderProps) => {
     return array; 
   }; 
 
-  const updateNowPlaying = (song: RankingItemData | null) => {
-    localStorage.setItem('nowPlaying', JSON.stringify(song))
+  const updateNowPlaying = (song: RankingItemData | Song | null) => {
+    // localStorage.setItem('nowPlaying', JSON.stringify(song))
+    // setNowPlaying(song)
+    encryptData("nowPlaying", song)
     setNowPlaying(song)
   }
 
-  const updatePendingPlaylist = (playlist: RankingItemData[]) => {
-    localStorage.setItem('pendingPlaylist', JSON.stringify(playlist))
+  const updatePendingPlaylist = (playlist: (RankingItemData| Song)[]) => {
+    // localStorage.setItem('pendingPlaylist', JSON.stringify(playlist))
+    // setPendingPlaylist(playlist)
+    encryptData("pendingPlaylist", playlist)
     setPendingPlaylist(playlist)
   }
 
-  const updatePlaylist = (playlist: RankingItemData[]) => {
+  const updatePlaylist = (playlist: RankingItemData[] | Song[]) => {
     localStorage.setItem('playlist', JSON.stringify(playlist))
     setPlaylist(playlist)
   }

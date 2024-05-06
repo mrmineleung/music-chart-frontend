@@ -1,12 +1,11 @@
 // import { usePlaylist } from "@/provider/PlaylistProvider"
 import { Trash2 } from "lucide-react"
-import { RankingItemData } from "./RankingItem"
 import { Button } from "./ui/button"
 import { Song } from "@/pages/UserPlaylist"
 
 interface PlaylistItemProps {
-    item: RankingItemData | Song,
-    handleDeleteItem : (item: RankingItemData | Song) => void
+    item: Song,
+    handleDeleteItem : (item: Song) => void
 }
 
 

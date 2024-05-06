@@ -13,6 +13,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import { useAuth } from "@/provider/AuthProvider";
+import { useToast } from "./ui/use-toast";
+// import { Song } from "@/pages/UserPlaylist";
 
 const YouTubePlayer = lazy(() => import("./YouTubePlayer"));
 
@@ -34,18 +37,107 @@ export interface RankingItemData {
 const RankingItem = ({ item: props }: RankingItemProps) => {
   const [showVideo, setShowVideo] = useState<boolean>(false);
   const {
-    playlist,
-    updatePlaylist,
     updateNowPlaying,
     pendingPlaylist,
     updatePendingPlaylist,
-    isOpenPlaylist,
-    setIsOpenPlaylist,
   } = usePlaylist();
 
-  const handleSaveToPlaylist = (playlist: RankingItemData[]) => {
-    updatePlaylist(playlist);
-    setIsOpenPlaylist(!isOpenPlaylist);
+  const { toast } = useToast();
+
+  // const handleSaveToPlaylist = (playlist: RankingItemData[]) => {
+  //   updatePlaylist(playlist);
+  //   setIsOpenPlaylist(!isOpenPlaylist);
+  // };
+
+  const API_URL = process.env.BACKEND_API;
+
+  const { accessToken, currentUser } = useAuth();
+
+  const fetchMyPlaylist = async () => {
+    const GET_MY_PLAYLIST_API = `${API_URL}playlists`;
+    try {
+      const response = await fetch(GET_MY_PLAYLIST_API, {
+        keepalive: true,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `bearer ${accessToken}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.status !== 200) {
+        console.log("error");
+        return null;
+      }
+      return data;
+    } catch (e) {
+      console.error(e);
+      return null;
+    }
+  };
+
+  const addToPlaylist = async (id: string, items: RankingItemData[]) => {
+    const ADD_TO_PLAYLIST = `${API_URL}playlists/${id}`;
+    try {
+      const response = await fetch(ADD_TO_PLAYLIST, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `bearer ${accessToken}`,
+        },
+        body: JSON.stringify(items),
+      });
+      const statusCode = response.status;
+
+      if (statusCode !== 200) {
+        console.log("error");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleSaveToPlaylist = async (items: RankingItemData[]) => {
+    // updatePlaylist(playlist);
+
+    if (!currentUser) {
+      toast({
+        title: `Login to unlock this function.`,
+      });
+      return;
+    }
+
+    const myPlaylist = await fetchMyPlaylist();
+    // addToPlaylist(myPlaylist[0].id, items);
+    // setIsOpenPlaylist(!isOpenPlaylist);
+
+    if (items.length == 1) {
+      addToPlaylist(myPlaylist[0].id, items);
+      toast({
+        title: `${items[0].song_title} saved to your playlist.`,
+      });
+    } else {
+      toast({
+        title: `${items.length} songs saved.`,
+      });
+    }
+  };
+
+  const handleAddToCurrentPlaylist = async (items: RankingItemData[]) => {
+    // updatePlaylist(playlist);
+
+    if (!currentUser) {
+      toast({
+        title: `Login to unlock this function.`,
+      });
+      return;
+    }
+
+    updatePendingPlaylist(items);
+    toast({
+      title: `${props.song_title} added to current playlist.`,
+    });
   };
 
   return (
@@ -247,10 +339,15 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
           </TooltipProvider>
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger asChild onClick={() => updatePendingPlaylist([...pendingPlaylist, props])}>
+              <TooltipTrigger
+                asChild
+                onClick={() =>
+                  handleAddToCurrentPlaylist([...pendingPlaylist as RankingItemData[], props])
+                }
+              >
                 <div className="flex items-center justify-center space-x-4 py-2 w-auto hover:bg-accent hover:text-accent-foreground">
                   <div className="flex w-4 h-4 items-center justify-center">
-                  <ListEnd className="absolute h-[1.2rem] w-[1.2rem]" />
+                    <ListEnd className="absolute h-[1.2rem] w-[1.2rem]" />
                   </div>
                 </div>
               </TooltipTrigger>
@@ -261,7 +358,11 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
           </TooltipProvider>
           <TooltipProvider>
             <Tooltip>
-              <TooltipTrigger asChild onClick={() => handleSaveToPlaylist([...playlist, props])}>
+              {/* <TooltipTrigger asChild onClick={() => handleSaveToPlaylist([...playlist, props])}> */}
+              <TooltipTrigger
+                asChild
+                onClick={() => handleSaveToPlaylist([props])}
+              >
                 <div className="flex items-center justify-center space-x-4 py-2 w-auto hover:bg-accent hover:text-accent-foreground">
                   <div className="flex w-4 h-4 items-center justify-center">
                     <ListPlus className="absolute h-[1.2rem] w-[1.2rem]" />
@@ -466,7 +567,9 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
           </div>
           <div
             className="flex items-center justify-center space-x-4 py-2 w-auto hover:bg-accent hover:text-accent-foreground"
-            onClick={() => updatePendingPlaylist([...pendingPlaylist, props])}
+            onClick={() =>
+              handleAddToCurrentPlaylist([...pendingPlaylist as RankingItemData[], props])
+            }
           >
             <div className="flex w-4 h-4 items-center justify-center w-auto">
               <ListEnd className="absolute h-[1.2rem] w-[1.2rem]" />
@@ -474,7 +577,8 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
           </div>
           <div
             className="flex items-center justify-center space-x-4 py-2 w-auto hover:bg-accent hover:text-accent-foreground"
-            onClick={() => handleSaveToPlaylist([...playlist, props])}
+            // onClick={() => handleSaveToPlaylist([...playlist, props])}
+            onClick={() => handleSaveToPlaylist([props])}
           >
             <div className="flex w-4 h-4 items-center justify-center w-auto">
               <ListPlus className="absolute h-[1.2rem] w-[1.2rem]" />
