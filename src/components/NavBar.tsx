@@ -82,7 +82,7 @@ const charts: { title: string; href: string; description: React.ReactNode }[] =
               </div>
             </div>
           </Link>
-          <Link key="TIKTOK TOP50" to="/charts/billboard/types/tiktok_top50">
+          <Link key="TIKTOK TOP50" to="/charts/billboard/types/tiktoktop50">
             <div className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg">
               <div className="flex w-full h-full justify-center items-center">
               TIKTOK TOP50
