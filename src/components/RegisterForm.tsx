@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { useState, useTransition } from "react";
 import { useAuth } from "@/provider/AuthProvider";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -122,7 +123,7 @@ const RegisterForm = () => {
           )}
         />
         <Button type="submit" className="w-full" disabled={isPending}>
-          Sign up
+          Sign up {isPending && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
         </Button>
       </form>
     </Form>
