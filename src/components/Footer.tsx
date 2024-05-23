@@ -139,7 +139,7 @@ const Footer = () => {
 
   return (
     <div className={`relative ${!nowPlaying ? "hidden" : ""}`}>
-      <div className="fixed inset-x-0 bottom-32 md:bottom-24 left-0 right-0 w-72 md:w-[500px]">
+      <div className="fixed inset-x-0 bottom-32 md:bottom-24 left-0 right-0 w-fit">
       <Button
                       variant="ghost"
                       size="icon"
@@ -153,7 +153,7 @@ const Footer = () => {
         <div
           className={`${
             isHide ? "hidden" : ""
-          } md:h-[500px] md:w-[500px] max-h-72 w-72`}
+          } md:h-[500px] md:w-[500px] max-h-72 w-auto`}
         >
           <ReactPlayer
             ref={player}
