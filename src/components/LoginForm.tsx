@@ -16,6 +16,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useTransition } from "react";
 import { useAuth } from "@/provider/AuthProvider";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   username: z.string().min(8, {
@@ -94,7 +95,7 @@ const LoginForm = () => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {errorMessage? 
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="dark:bg-red-500 dark:text-white">
       <AlertTitle>Error</AlertTitle>
       <AlertDescription>
       {errorMessage}
@@ -144,7 +145,7 @@ const LoginForm = () => {
                 </Link>
               </div>
         <Button type="submit" className="w-full" disabled={isPending}>
-          Login
+          Login {isPending && <Loader2 className="ml-2 h-4 w-4 animate-spin" />}
         </Button>
       </form>
     </Form>

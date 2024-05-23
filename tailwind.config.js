@@ -73,7 +73,8 @@ module.exports = {
       },
       fontFamily: {
         'sriracha-regular': ['"Sriracha"', 'cursive'],
-        'livvic-regular': ['"Livvic"', 'sans-serif']
+        'livvic-regular': ['"Livvic"', 'sans-serif'],
+        'poppins-regular': ['"Poppins"', 'sans-serif']
       },
     },
   },

@@ -19,7 +19,8 @@ interface PlaylistContextType {
   updatePendingPlaylist: (playlist: (RankingItemData | Song)[]) => void;
   isOpenPlaylist: boolean;
   setIsOpenPlaylist: React.Dispatch<React.SetStateAction<boolean>>;
-  shuffle: <T,>(list:T[]) => T[]
+  shuffle: <T,>(list:T[]) => T[];
+  sendAnalytics: (type: string, item_id: string) => void;
 }
 
 const initial_playlist_item = {
@@ -45,13 +46,15 @@ const playlistContextState = {
   updatePendingPlaylist: () => {},
   isOpenPlaylist: false,
   setIsOpenPlaylist: () => {},
-  shuffle: <T,>(list: T[]) => list
+  shuffle: <T,>(list: T[]) => list,
+  sendAnalytics: () => {},
 };
 
 const PlaylistProviderContext =
   createContext<PlaylistContextType>(playlistContextState);
 
 const PlaylistProvider = ({ children }: PlaylistProviderProps) => {
+  const API_URL = process.env.BACKEND_API;
   const SECRET_KEY = 'mysecretkey'; 
 
   const encryptData =(name: string,data: unknown)=> {
@@ -105,6 +108,9 @@ const PlaylistProvider = ({ children }: PlaylistProviderProps) => {
     // setNowPlaying(song)
     encryptData("nowPlaying", song)
     setNowPlaying(song)
+    if (song) {
+      sendAnalytics("song", song.song_id)
+    }
   }
 
   const updatePendingPlaylist = (playlist: (RankingItemData| Song)[]) => {
@@ -119,6 +125,17 @@ const PlaylistProvider = ({ children }: PlaylistProviderProps) => {
     setPlaylist(playlist)
   }
 
+  const sendAnalytics = (type: string, item_id: string) => {
+    fetch(`${API_URL}analytics/play_history/${type}/${item_id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    
+  }
+
+
   return (
     <PlaylistProviderContext.Provider
       value={{
@@ -130,7 +147,8 @@ const PlaylistProvider = ({ children }: PlaylistProviderProps) => {
         updatePendingPlaylist,
         isOpenPlaylist,
         setIsOpenPlaylist,
-        shuffle
+        shuffle,
+        sendAnalytics,
       }}
     >
       {children}

@@ -130,9 +130,11 @@ const Header = () => {
             {!currentUser ? (
               <Link
                 to="/login"
-                className="text-sm font-semibold leading-6 text-gray-900"
+                className="text-sm font-semibold text-center leading-6"
               >
-                <Button variant="link">Login</Button>
+                <Button variant="link" className="dark:text-current">
+                  Login
+                  </Button>
               </Link>
             ) : (
               <></>

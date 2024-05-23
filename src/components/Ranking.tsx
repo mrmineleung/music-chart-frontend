@@ -13,7 +13,7 @@ const Ranking = ({ chart, result }: RankingProps) => {
     return (
       <>
         <Virtuoso
-          className="!h-[600px]"
+          className="!h-[500px]"
           data={result}
           itemContent={(key, item) => <RankingItem key={key} item={item} />}
         />
@@ -25,7 +25,7 @@ const Ranking = ({ chart, result }: RankingProps) => {
     return (
       <>
         <Virtuoso
-          className="!h-[600px]"
+          className="!h-[500px]"
           data={result}
           itemContent={(key, item) => (
             <BillboardRankingItem key={key} item={item} />

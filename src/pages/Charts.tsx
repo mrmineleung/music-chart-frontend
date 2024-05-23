@@ -35,6 +35,7 @@ interface RankingItemResponse {
   youtube_video_id: string;
   youtube_video_title: string;
   youtube_video_author: string;
+  song_id: string;
 }
 
 type ChartsParams = {
@@ -144,7 +145,7 @@ const Charts = ({ ...props }: ChartsProps) => {
 
   return (
     <>
-      <h1 className="scroll-m-20 border-b text-4xl font-extrabold tracking-tight lg:text-5xl text-center">
+      <h1 className="scroll-m-20 border-b text-4xl font-extrabold tracking-tight lg:text-5xl text-center ">
         {response?.chart} - {response?.type}
       </h1>
 
@@ -193,7 +194,7 @@ const Charts = ({ ...props }: ChartsProps) => {
         </div>
       </div>
       <Suspense fallback={<>Loading...</>}>
-        <Ranking chart={charts} result={filteredRankingList} />
+       <Ranking chart={charts} result={filteredRankingList} />
       </Suspense>
     </>
   );

@@ -32,6 +32,7 @@ export interface RankingItemData {
   song_artists: string;
   song_title: string;
   youtube_video_id: string;
+  song_id: string;
 }
 
 const RankingItem = ({ item: props }: RankingItemProps) => {
@@ -142,7 +143,7 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
           <p className="text-lg md:text-4xl">{props.rank}</p>
         </div>
         <div className="rounded-md border">
-          <div className="flex items-center justify-center min-w-8 min-h-8 md:min-w-14 md:min-h-14">
+          <div className="flex items-center justify-center w-8 h-8 md:w-14 md:h-14">
             {!props.rank_changes_flow ? (
               <p>
                 <svg
@@ -317,7 +318,7 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
           <p className="text-3xl md:text-4xl">{props.rank}</p>
         </div>
         <div className="rounded-md border">
-          <div className="flex items-center justify-center min-w-10 min-h-10 md:min-w-14 md:min-h-14">
+          <div className="flex items-center justify-center w-10 h-10 md:w-14 md:h-14">
             {!props.rank_changes_flow ? (
               <p>
                 <svg
