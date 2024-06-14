@@ -17,9 +17,13 @@ interface YouTubePlayerProps {
 const YouTubePlayer = memo(({id, type, width, height, autoplay} : YouTubePlayerProps) => {
   return (
     <>
+    <div className="player-wrapper">
     <iframe 
-  width={width? width : 200}
-  height={height? height : 100}
+  width={width? width : '100%'}
+  height={height? height : '100%'}
+  // width="100%"
+  // height="100%"
+  className="youtube-player"
   src={`${type}${id}${autoplay? '?autoplay=1&mute=0' : ''}`}
   title="YouTube video player"
   allow="accelerometer; 
@@ -28,7 +32,8 @@ const YouTubePlayer = memo(({id, type, width, height, autoplay} : YouTubePlayerP
   encrypted-media; 
   gyroscope; 
   picture-in-picture; 
-  web-share" allowFullScreen></iframe></>
+  web-share" allowFullScreen></iframe></div>
+  </>
   )
 })
 

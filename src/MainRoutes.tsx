@@ -24,6 +24,7 @@ import VerifyEmail from "./pages/VerifyEmail";
 import PublicPlaylist from "./pages/PublicPlaylist";
 import ResetPassword from "./pages/ResetPassword";
 import OAuthCallback from "./pages/OAuthCallback";
+import Song from "./pages/Song";
 
 const routes = createBrowserRouter([
   {
@@ -70,6 +71,10 @@ const routes = createBrowserRouter([
       {
         path: "playlists/:playlist_id",
         element: <PublicPlaylist />,
+      },
+      {
+        path: "songs/:song_id",
+        element: <Song />,
       },
       {
         path: "*",

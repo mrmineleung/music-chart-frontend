@@ -74,7 +74,7 @@ const Header = () => {
           aria-label="Global"
         >
           <div className="flex lg:flex-1">
-            <div className="text-5xl font-extrabold top-5">
+            <div className="text-5xl font-extrabold my-2">
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 to-violet-500 font-sriracha-regular">
                 <Link to="/">mucha</Link>
               </span>

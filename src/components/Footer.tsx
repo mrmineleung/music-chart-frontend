@@ -139,7 +139,9 @@ const Footer = () => {
 
   return (
     <div className={`relative ${!nowPlaying ? "hidden" : ""}`}>
+
       <div className="fixed inset-x-0 bottom-32 md:bottom-24 left-0 right-0 w-fit">
+      
       <Button
                       variant="ghost"
                       size="icon"
@@ -147,9 +149,6 @@ const Footer = () => {
                     >
                         {isHide? <ChevronUp className="h-6 w-6" />:<ChevronDown className="h-6 w-6" />}
                     </Button>
-        {/* <button onClick={() => setIsHide(!isHide)}>
-          {isHide ? "Show" : "Hide"}
-        </button> */}
         <div
           className={`${
             isHide ? "hidden" : ""

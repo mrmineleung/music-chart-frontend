@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/provider/AuthProvider";
+import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   Link,
@@ -52,10 +53,9 @@ const OAuthCallback = () => {
     }
   }, [code, provider, state]);
 
-  return (
-    
+  return (<>
+    { isError ?
     <Card className="mx-auto my-12 max-w-sm">
-      {isError?<>
       <CardHeader>
         <CardTitle className="text-center">
           <div className="text-5xl font-extrabold top-5">
@@ -70,8 +70,11 @@ const OAuthCallback = () => {
         <Link to="/">
           <Button variant="link">Back to Homepage</Button>
         </Link>
-      </CardContent></> : <></>}
-    </Card>
+      </CardContent>
+      </Card> : <div className="flex m-auto items-center justify-items-center">
+      <Loader2 className="h-16 w-16 animate-spin" />
+        </div>}
+    </>
   );
 };
 

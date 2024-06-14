@@ -11,6 +11,7 @@ import {
 } from "./ui/tooltip";
 import { useAuth } from "@/provider/AuthProvider";
 import { useToast } from "./ui/use-toast";
+import { Link } from "react-router-dom";
 
 
 interface RankingItemProps {
@@ -125,7 +126,7 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
   };
 
   return (
-    <Card className="relative mx-4 my-2 md:my-4">
+    <Card className="relative mx-4 my-2 md:my-0 md:border-0">
 
       <div className="hidden md:grid md:grid-cols-10 md:justify-items-center md:place-items-center md:m-2">
         <div className="">
@@ -210,11 +211,11 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
         </div>
 
         <div className="flex justify-self-start items-center justify-center space-x-4 p-4 col-span-3">
-          <div className="flex-1 space-y-1 ">
-            <p className="text-left text-lg m-2 leading-none">
-              {props.song_title}
+          <div className="flex-1 space-y-3 ">
+            <p className="text-left text-lg leading-none">
+              <Link to={`/songs/${props.song_id}`}>{props.song_title}</Link>
             </p>
-            <p className="text-left text-sm m-2 text-muted-foreground">
+            <p className="text-left text-sm text-muted-foreground">
               {props.song_artists}
             </p>
           </div>
