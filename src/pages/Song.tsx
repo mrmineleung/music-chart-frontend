@@ -94,6 +94,7 @@ export const options = {
   scales: {
     y: {
       min: 1,
+      // max: 100,
       reverse: true,
       ticks: {
         // forces step size to be 50 units
@@ -273,7 +274,7 @@ const Song = ({ ...props }: ChartsProps) => {
           </div>
         </div>
       </div>
-
+      <br/>
       <Suspense
         fallback={
           <>
@@ -288,6 +289,7 @@ const Song = ({ ...props }: ChartsProps) => {
           // height={300}
         />
       </Suspense>
+      <br />
 
       <Suspense
         fallback={
