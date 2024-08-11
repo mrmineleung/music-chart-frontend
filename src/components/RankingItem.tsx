@@ -12,6 +12,8 @@ import {
 import { useAuth } from "@/provider/AuthProvider";
 import { useToast } from "./ui/use-toast";
 import { Link } from "react-router-dom";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import { Skeleton } from "./ui/skeleton";
 
 
 interface RankingItemProps {
@@ -202,11 +204,19 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
         </div>
 
         <div className="ml-2 mr-2">
-          <img
+          {/* <img
             className="hover:scale-125 rounded-lg shadow-lg transition ease-in-out delay-50"
             src={props.album_image}
             width={80}
             height={80}
+          /> */}
+          <LazyLoadImage
+            alt={props.album_name}
+            height={80}
+            src={props.album_image}
+            width={80}
+            className="hover:scale-125 rounded-lg shadow-lg transition ease-in-out delay-50"
+            placeholder={<Skeleton className={`h-[80px] w-[80px] rounded-lg`} />}
           />
         </div>
 

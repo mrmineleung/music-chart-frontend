@@ -5,6 +5,8 @@ import { RankingItemData } from "./RankingItem"
 import { Song } from "@/pages/UserPlaylist"
 import { usePlaylist } from "@/provider/PlaylistProvider"
 import { Button } from "./ui/button"
+import { LazyLoadImage } from "react-lazy-load-image-component"
+import { Skeleton } from "./ui/skeleton"
 
 interface PlaylistItemProps {
     item: Song,
@@ -28,11 +30,18 @@ const PublicPlaylistItem = ({item} : PlaylistItemProps) => {
                         <Play className="h-4 w-4" />
                     </Button>
 
-            <img
+            {/* <img
             className=""
             src={item.album_image}
             width={80}
             height={80}
+          /> */}
+          <LazyLoadImage
+            alt={item.album_name}
+            height={80}
+            src={item.album_image}
+            width={80}
+            placeholder={<Skeleton className={`h-[80px] w-[80px]`} />}
           />
         <div className="flex flex-col space-y-2">
             <div className="text-lg leading-none">{item.song_title}</div>
