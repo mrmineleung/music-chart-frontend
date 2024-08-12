@@ -14,6 +14,7 @@ import { useToast } from "./ui/use-toast";
 import { Link } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Skeleton } from "./ui/skeleton";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 interface RankingItemProps {
   item: RankingItemData;
@@ -216,10 +217,14 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
           <LazyLoadImage
             alt={props.album_name}
             height={80}
-            src={props.album_image}
+            effect="blur"
+            wrapperProps={{
+              style: { transitionDelay: "1s" },
+            }}
             width={80}
             className="hover:scale-125 rounded-lg shadow-lg transition ease-in-out delay-50"
             placeholder={<Skeleton className={`h-[80px] w-[80px] rounded-lg`} />}
+            src={props.album_image}
           />
         </div>
 

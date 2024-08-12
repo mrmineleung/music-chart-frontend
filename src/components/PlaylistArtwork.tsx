@@ -3,6 +3,7 @@ import { Playlist } from "@/pages/UserPlaylist";
 import { Link } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Skeleton } from "./ui/skeleton";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 interface PlaylistArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   playlist: Playlist;
@@ -29,12 +30,20 @@ export function PlaylistArtwork({
             alt={playlist.name}
             height={height}
             width={width}
+            effect="blur"
+            wrapperProps={{
+              style: { transitionDelay: "1s" },
+            }}
+            placeholder={
+              <Skeleton
+                className={`h-[${height}px] w-[${width}px] rounded-md`}
+              />
+            }
             src={`${API_URL}playlists/thumbnail/${playlist.id}`}
             className={cn(
               "object-cover transition-all hover:scale-105",
               aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"
             )}
-            placeholder={<Skeleton className={`h-[${height}px] w-[${width}px] rounded-md`} />}
           />
           {/* <img
               src={`${API_URL}playlists/thumbnail/${playlist.id}`}
