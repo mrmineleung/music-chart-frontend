@@ -13,7 +13,7 @@ COPY . .
 
 RUN yarn run build
 
-FROM nginx:1.29-alpine-silm
+FROM nginx:1.29.0-alpine-slim
 
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist /var/www/html/
