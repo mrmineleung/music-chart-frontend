@@ -5,13 +5,13 @@ WORKDIR /app
 
 COPY package.json ./
 
-RUN yarn install
+RUN npm install
 
 ENV PATH /app/node_modules/.bin:$PATH
 
 COPY . .
 
-RUN yarn run build
+RUN npm run build
 
 FROM nginx:1.29.0-alpine-slim
 
