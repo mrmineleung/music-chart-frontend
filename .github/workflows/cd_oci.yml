@@ -1,0 +1,90 @@
+name: Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment'
+        required: true
+        type: choice
+        options:
+          - staging
+          - prod
+        default: 'staging'
+      version:
+        description: 'Version (image name)'
+        required: true
+      color:
+        description: 'Color'
+        required: false
+        type: choice
+        options:
+          - blue
+          - green
+        default: 'blue'
+      canaryEnabled:
+        description: 'Canary Enabled'
+        required: false
+        type: choice
+        options:
+          - "true"
+          - "false"
+        default: 'false'
+
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      contents: write
+      actions: write
+      issues: write
+      pull-requests: write
+
+    env:
+      OCI_CLI_USER: ${{ secrets.OCI_CLI_USER }}
+      OCI_CLI_TENANCY: ${{ secrets.OCI_CLI_TENANCY }}
+      OCI_CLI_FINGERPRINT: ${{ secrets.OCI_CLI_FINGERPRINT }}
+      OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_CLI_KEY_CONTENT }}
+      OCI_CLI_REGION: ${{ secrets.OCI_CLI_REGION }}
+
+    steps:
+    - name: Set up Helm
+      uses: azure/setup-helm@v4.3.0
+
+    - name: Configure Kubectl
+      uses: oracle-actions/configure-kubectl-oke@v1.5.0
+      id: test-configure-kubectl-oke-action
+      with:
+        cluster: ${{ secrets.OKE_CLUSTER_OCID }}
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Update Chart values
+      uses: fjogeleit/yaml-update-action@main
+      with:
+        valueFile: 'helm/${{ secrets.DOCKERHUB_REPOSITORY_NAME }}/values.yaml'
+        branch: deployment/${{ github.event.inputs.environment }}-${{ github.event.inputs.version }}
+        targetBranch: deployment/${{ github.event.inputs.environment }}
+        commitChange: false
+        createPR: 'true'
+        description: 'Deploy to ${{ github.event.inputs.environment }}'
+        message: '${{ github.event.inputs.environment }}-${{ github.event.inputs.version }}'
+        title: 'Update ${{ secrets.DOCKERHUB_REPOSITORY_NAME }} version to ${{ github.event.inputs.version }}'
+        changes: |
+          {
+            "app.namespace": "${{ secrets.PROJECT_NAMESPACE }}",
+            "deployment.environment": "${{ github.event.inputs.environment }}",
+            "deployment.version": "${{ github.event.inputs.version }}",
+            "deployment.activeColor": "${{ github.event.inputs.color }}",
+            "deployment.canaryEnabled": "${{ github.event.inputs.canaryEnabled }}",
+            "app.image": "${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY_NAME }}",
+            "app.host": "${{ secrets.APP_HOST }}"
+          }
+
+    - name: Deploy to OKE using Helm
+      run: |
+        helm upgrade --install ${{ secrets.DOCKERHUB_REPOSITORY_NAME }} ./helm/${{ secrets.DOCKERHUB_REPOSITORY_NAME }} --namespace ${{ secrets.PROJECT_NAMESPACE }}-${{ github.event.inputs.environment }}
+      

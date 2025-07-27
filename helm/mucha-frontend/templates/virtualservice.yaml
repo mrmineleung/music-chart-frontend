@@ -1,0 +1,43 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: {{ .Values.app.name }}
+  labels:
+    app: {{ .Values.app.name }}
+    environment: {{ .Values.deployment.environment }}
+    version: {{ .Values.deployment.version }}
+spec:
+  hosts:
+    {{ if ne .Values.deployment.environment "prod" }}
+    - {{ .Values.deployment.environment }}.{{ .Values.app.host }}
+    {{ else }}
+    - {{ .Values.app.host }}
+    {{ end }}
+  gateways:
+    - {{ .Release.Namespace }}-gateway
+  http:
+    - match:
+      - uri:
+          prefix: /
+      route:
+        {{- if .Values.deployment.canaryEnabled }}
+        - destination:
+            host: {{ .Values.app.name }}
+            port:
+              number: {{ .Values.app.port }}
+            subset: blue
+          weight: {{ .Values.deployment.canaryWeights.blue }}
+        - destination:
+            host: {{ .Values.app.name }}
+            port:
+              number: {{ .Values.app.port }}
+            subset: green
+          weight: {{ .Values.deployment.canaryWeights.green }}
+        {{- else }}
+        - destination:
+            host: {{ .Values.app.name }}
+            port:
+              number: {{ .Values.app.port }}
+            subset: {{ .Values.deployment.activeColor }}
+          weight: 100
+        {{- end }}

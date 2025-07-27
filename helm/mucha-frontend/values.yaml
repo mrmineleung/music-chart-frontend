@@ -1,0 +1,25 @@
+app:
+  name: mucha-frontend
+  image:
+  port: 3000
+  host:
+
+deployment:
+  environment: staging
+  version:
+  strategy: blue-green
+  activeColor: blue
+  replicas: 2
+  canaryEnabled: true
+  canaryWeights:
+    blue: 90
+    green: 10
+
+#ingress:
+#  hosts:
+#    - host: api.domain.com
+#      paths: ["/"]
+
+#tls:
+#  enabled: true
+#  certManagerClusterIssuer: letsencrypt-prod

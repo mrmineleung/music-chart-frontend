@@ -1,0 +1,53 @@
+{{- $activeColor := .Values.deployment.activeColor }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.app.name }}-{{ $activeColor }}
+  labels:
+    app: {{ .Values.app.name }}
+    color: {{ $activeColor }}
+    environment: {{ .Values.deployment.environment }}
+    version: {{ .Values.deployment.version }}
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.app.name }}
+      color: {{ $activeColor }}
+      environment: {{ .Values.deployment.environment }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app.name }}
+        color: {{ $activeColor }}
+        environment: {{ .Values.deployment.environment }}
+        version: {{ .Values.deployment.version }}
+    spec:
+      containers:
+        - name: {{ .Values.app.name }}
+          image: {{ .Values.app.image }}
+          ports:
+            - containerPort: {{ .Values.app.port }}
+          resources:
+            requests:
+              memory: "300Mi"
+              cpu: "250m"
+            limits:
+              memory: "400Mi"
+              cpu: "500m"
+          env:
+            - name: BACKEND_API
+              value: {{ if ne .Values.deployment.environment "prod" }} "{{ .Values.deployment.environment }}.{{ .Values.app.host }}/rest/api/v1/" {{ else }} "{{ .Values.app.host }}/rest/api/v1/" {{ end }}
+{{/*          envFrom:*/}}
+{{/*            - configMapRef:*/}}
+{{/*                name: {{ .Values.app.name }}-{{ .Values.deployment.environment }}-config*/}}
+{{/*          volumeMounts:*/}}
+{{/*            - name: {{ .Values.app.name }}-{{ .Values.deployment.environment }}-config-volume*/}}
+{{/*              mountPath: "/.env"*/}}
+{{/*              subPath: .env*/}}
+{{/*              readOnly: true*/}}
+{{/*      volumes:*/}}
+{{/*        - name: {{ .Values.app.name }}-{{ .Values.deployment.environment }}-config-volume*/}}
+{{/*          configMap:*/}}
+{{/*            name: {{ .Values.app.name }}-{{ .Values.deployment.environment }}-config*/}}
+
