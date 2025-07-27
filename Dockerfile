@@ -3,6 +3,7 @@ FROM node:22.17.1-alpine AS build
 WORKDIR /app
 
 COPY package.json package-lock.json ./
+RUN npm ci
 
 ENV PATH /app/node_modules/.bin:$PATH
 
