@@ -14,12 +14,3 @@ deployment:
   canaryWeights:
     blue: 90
     green: 10
-
-#ingress:
-#  hosts:
-#    - host: api.domain.com
-#      paths: ["/"]
-
-#tls:
-#  enabled: true
-#  certManagerClusterIssuer: letsencrypt-prod
