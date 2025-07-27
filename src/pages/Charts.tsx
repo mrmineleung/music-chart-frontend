@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { usePlaylist } from "@/provider/PlaylistProvider";
 import { Play } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Ranking = lazy(() => import("@/components/Ranking"));
 
@@ -56,6 +57,7 @@ const Charts = ({ ...props }: ChartsProps) => {
     RankingItemResponse[]
   >([]);
   const [isAscOrder, setIsAscOrder] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const {
     // updatePlaylist,
@@ -124,6 +126,7 @@ const Charts = ({ ...props }: ChartsProps) => {
     const fetchData = async () => {
       const GET_CHART_API = `${API_URL}charts/${charts}/types/${types}`;
       try {
+        setIsLoading(true);
         const response = await fetch(GET_CHART_API, {
           keepalive: true,
           headers: {
@@ -137,6 +140,8 @@ const Charts = ({ ...props }: ChartsProps) => {
       } catch (e) {
         console.error(e);
         throw e;
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -145,56 +150,71 @@ const Charts = ({ ...props }: ChartsProps) => {
 
   return (
     <>
-      <h1 className="scroll-m-20 border-b text-3xl font-extrabold tracking-tight lg:text-5xl">
-        {response?.chart} - {response?.type}
-      </h1>
-
-      {response?.year ? (
-        <h2 className="scroll-m-20  pb-2 text-lg font-semibold tracking-tight first:mt-0">
-          {response?.year} - {response?.hour}
-        </h2>
+      {isLoading ? (
+        <div>
+          <Skeleton className="h-[50px] w-[200px] my-1" />
+          <Skeleton className="h-[30px] w-[100px] my-1" />
+        </div>
       ) : (
-        <></>
-      )}
-      {response?.date ? (
-        <h2 className="scroll-m-20  pb-2 text-lg font-semibold tracking-tight first:mt-0">
-          {response?.date}
-        </h2>
-      ) : (
-        <></>
-      )}
+        <div>
+          <h1 className="scroll-m-20 border-b text-3xl font-extrabold tracking-tight lg:text-5xl">
+            {response?.chart} - {response?.type}
+          </h1>
 
+          {response?.year ? (
+            <h2 className="scroll-m-20  pb-2 text-lg font-semibold tracking-tight first:mt-0">
+              {response?.year} - {response?.hour}
+            </h2>
+          ) : (
+            <></>
+          )}
+          {response?.date ? (
+            <h2 className="scroll-m-20  pb-2 text-lg font-semibold tracking-tight first:mt-0">
+              {response?.date}
+            </h2>
+          ) : (
+            <></>
+          )}
+        </div>
+      )}
       {/* <Input
         className="my-4"
         type="text"
         placeholder="Search"
         onChange={(e) => handleSearch(e)}
       /> */}
-      <div className="flex flex-row pb-1">
-        <div className="flex flex-col md:flex-row md:space-x-2">
-          <Button onClick={() => handlePlayAll(rankingList)} variant="outline">
-            <Play className="mr-2 h-4 w-4" /> Play all
-          </Button>
-          {/* <Button
+      {isLoading ? (
+        <></>
+      ) : (
+        <div className="flex flex-row pb-1">
+          <div className="flex flex-col md:flex-row md:space-x-2">
+            <Button
+              onClick={() => handlePlayAll(rankingList)}
+              variant="outline"
+            >
+              <Play className="mr-2 h-4 w-4" /> Play all
+            </Button>
+            {/* <Button
             onClick={() => handleSaveAllToPlaylist(rankingList)}
             variant="outline"
           >
             <ListPlus className="mr-2 h-4 w-4" /> Save all to playlist
           </Button> */}
-          <Input
-        type="text"
-        placeholder="Search"
-        onChange={(e) => handleSearch(e)}
-      />
+            <Input
+              type="text"
+              placeholder="Search"
+              onChange={(e) => handleSearch(e)}
+            />
+          </div>
+          <div className="flex flex-1 justify-end items-end">
+            <Button onClick={() => handleSort(!isAscOrder)} variant="outline">
+              <CaretSortIcon className="mr-2 h-4 w-4" /> Sort
+            </Button>
+          </div>
         </div>
-        <div className="flex flex-1 justify-end items-end">
-          <Button onClick={() => handleSort(!isAscOrder)} variant="outline">
-            <CaretSortIcon className="mr-2 h-4 w-4" /> Sort
-          </Button>
-        </div>
-      </div>
+      )}
       <Suspense fallback={<>Loading...</>}>
-       <Ranking chart={charts} result={filteredRankingList} />
+        <Ranking chart={charts} result={filteredRankingList} />
       </Suspense>
     </>
   );

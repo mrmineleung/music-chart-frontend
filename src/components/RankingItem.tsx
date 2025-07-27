@@ -1,6 +1,5 @@
 import { memo } from "react";
 // import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { usePlaylist } from "@/provider/PlaylistProvider";
 import { ListEnd, ListPlus, Play } from "lucide-react";
 import {
@@ -13,7 +12,7 @@ import { useAuth } from "@/provider/AuthProvider";
 import { useToast } from "./ui/use-toast";
 import { Link } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { Skeleton } from "./ui/skeleton";
+// import { Skeleton } from "./ui/skeleton";
 import "react-lazy-load-image-component/src/effects/blur.css";
 
 
@@ -70,7 +69,8 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
     }
   };
 
-  const addToPlaylist = async (id: string, items: RankingItemData[]) => {
+  const addToMyPlaylist = async (id: string, items: RankingItemData[]) => {
+    console.log(items);
     const ADD_TO_PLAYLIST = `${API_URL}playlists/${id}`;
     try {
       const response = await fetch(ADD_TO_PLAYLIST, {
@@ -91,6 +91,28 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
     }
   };
 
+
+  const createMyPlaylist = async (name: string, description: string) => {
+    const CREATE_PLAYLIST = `${API_URL}playlists`;
+    try {
+      const response = await fetch(CREATE_PLAYLIST, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `bearer ${accessToken}`,
+        },
+        body: JSON.stringify({name: name, description: description}),
+      });
+      const statusCode = response.status;
+
+      if (statusCode !== 200) {
+        console.log("error");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleSaveToPlaylist = async (items: RankingItemData[]) => {
 
     if (!currentUser) {
@@ -100,9 +122,16 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
       return;
     }
 
-    const myPlaylist = await fetchMyPlaylist();
+    let myPlaylist = await fetchMyPlaylist();
+    
+    if (!myPlaylist || myPlaylist.length == 0) {
+      // create playlist
+      await createMyPlaylist('My playlist', '')
+      myPlaylist = await fetchMyPlaylist();
+    }
+
     if (items.length == 1) {
-      addToPlaylist(myPlaylist[0].id, items);
+      addToMyPlaylist(myPlaylist[0].id, items);
       toast({
         title: `${items[0].song_title} saved to your playlist.`,
       });
@@ -211,6 +240,7 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
             width={80}
             height={80}
           /> */}
+          <div className="hover:scale-125 transition ease-in-out delay-50">
           <LazyLoadImage
             alt={props.album_name}
             height={80}
@@ -218,11 +248,13 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
             wrapperProps={{
               style: { transitionDelay: "1s" },
             }}
+            // wrapperClassName="hover:scale-125 rounded-lg shadow-lg transition ease-in-out delay-50"
             width={80}
-            className="hover:scale-125 rounded-lg shadow-lg transition ease-in-out delay-50"
-            placeholder={<Skeleton className={`h-[80px] w-[80px] rounded-lg`} />}
+            className="rounded-lg shadow-lg"
+            // placeholder={<Skeleton className={`h-[80px] w-[80px] rounded-lg`} />}
             src={props.album_image}
           />
+          </div>
         </div>
 
         <div className="flex justify-self-start items-center justify-center space-x-4 p-4 col-span-3">
@@ -273,6 +305,7 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
+          {/* <PlaylistDialog/> */}
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger
@@ -328,7 +361,7 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
             </p>
           </div>
         </div>
-        <Separator className="col-span-10"></Separator>
+        {/* <Separator className="col-span-10"></Separator> */}
         <div className="col-span-10">
           <p className="text-center text-sm m-2 text-muted-foreground text-wrap text-ellipsis">
             {props.album_name}

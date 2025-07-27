@@ -59,7 +59,7 @@ const UserPlaylist = () => {
             const data = await response.json();
 
             setAllPlaylist(data)
-            setSelectedPlaylistId(data? data[0].id: null)
+            setSelectedPlaylistId(data && data.length > 0? data[0].id: null)
 
 
           } catch (e) {

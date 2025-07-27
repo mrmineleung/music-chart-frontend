@@ -1,6 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player/lazy";
-import { ChevronDown, ChevronUp, Pause, Play, Shuffle, SkipForward, Square, Volume2, VolumeX } from "lucide-react";
+import {
+  Captions,
+  ChevronDown,
+  ChevronUp,
+  Pause,
+  Play,
+  Shuffle,
+  SkipForward,
+  Square,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
 import { Button } from "./ui/button";
 import { Slider } from "./ui/slider";
 // import { Checkbox } from "./components/ui/checkbox"
@@ -15,6 +26,21 @@ import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
 import { usePlaylist } from "@/provider/PlaylistProvider";
 import { toast } from "./ui/use-toast";
+import RollingLyrics, { LyricLine } from "./RollingLyrics";
+import FullScreenPlayer from "./FullScreenPlayer";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
+
+interface LyricsItem {
+  code: string;
+  name: string;
+  value: LyricLine[];
+}
 
 const Footer = () => {
   const [isHide, setIsHide] = useState<boolean>(false);
@@ -25,24 +51,69 @@ const Footer = () => {
   const [played, setPlayed] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [currentTime, setCurrentTime] = useState<number>(0);
+  const [lyrics, setLyrics] = useState<LyricsItem[]>([]);
+  const [currentLyrics, setCurrentLyrics] = useState<LyricsItem | null>(null);
 
-  const { nowPlaying, updateNowPlaying, pendingPlaylist, updatePendingPlaylist, shuffle, setIsOpenPlaylist } =
-    usePlaylist();
+  const {
+    nowPlaying,
+    updateNowPlaying,
+    pendingPlaylist,
+    updatePendingPlaylist,
+    shuffle,
+    setIsOpenPlaylist,
+  } = usePlaylist();
 
   const player = useRef<ReactPlayer>(null);
 
   useEffect(() => {
     const fetchNextSong = () => {
-
       if (!nowPlaying && pendingPlaylist.length > 0) {
         const [head, ...tail] = pendingPlaylist;
         updateNowPlaying(head);
         updatePendingPlaylist(tail);
       }
-      setIsPlaying(true)
+      setIsPlaying(true);
     };
 
     fetchNextSong();
+    setLyrics([]);
+    setCurrentLyrics(null);
+  }, [nowPlaying, pendingPlaylist]);
+
+  useEffect(() => {
+    const fetchSongLyrics = async () => {
+      const API_URL = process.env.BACKEND_API;
+      if (nowPlaying) {
+        const GET_LYRICS_API = `${API_URL}songs/${nowPlaying?.song_id}/lyrics`;
+        try {
+          const response = await fetch(GET_LYRICS_API, {
+            keepalive: true,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          const data: LyricsItem[] = await response.json();
+          console.log(data);
+          setLyrics(data);
+
+          if (data != null && data.length > 0) {
+            const defaultCaption = data.find((lyric) => lyric.code === "en");
+            if (defaultCaption) {
+              setCurrentLyrics(defaultCaption);
+            } else {
+              setCurrentLyrics(data[0] || null);
+            }
+          } else {
+            setCurrentLyrics(null);
+          }
+        } catch (e) {
+          console.error(e);
+          throw e;
+        }
+      }
+    };
+
+    fetchSongLyrics();
   }, [nowPlaying, pendingPlaylist]);
 
   momentDurationFormatSetup(moment);
@@ -51,26 +122,27 @@ const Footer = () => {
     return moment.duration(seconds, "seconds").format("mm:ss", { trim: false });
   };
 
-
   const handleNextSong = () => {
     if (pendingPlaylist.length > 0) {
-    const [head, ...tail] = pendingPlaylist;
-    updateNowPlaying(head);
-    updatePendingPlaylist(tail);
+      const [head, ...tail] = pendingPlaylist;
+      updateNowPlaying(head);
+      updatePendingPlaylist(tail);
     } else {
       handleStopPlaying();
     }
-  }
+  };
 
   const handleStopPlaying = () => {
-    updateNowPlaying(null)
-    updatePendingPlaylist([])
-  }
+    updateNowPlaying(null);
+    updatePendingPlaylist([]);
+    setCurrentLyrics(null);
+    setLyrics([]);
+  };
 
   const handleShuffle = () => {
-    updatePendingPlaylist(shuffle(pendingPlaylist))
-    setIsOpenPlaylist(true)
-  }
+    updatePendingPlaylist(shuffle(pendingPlaylist));
+    setIsOpenPlaylist(true);
+  };
 
   const handleReady = () => {
     console.log("onReady");
@@ -82,8 +154,11 @@ const Footer = () => {
     setIsPlaying(false);
     handleNextSong();
     if (e == 150) {
-    toast({title: "Video unavailable", 
-    description: "Playback on other websites has been disabled by the video owner"})
+      toast({
+        title: "Video unavailable",
+        description:
+          "Playback on other websites has been disabled by the video owner",
+      });
     }
   };
 
@@ -107,7 +182,6 @@ const Footer = () => {
     setIsPlaying(!isPlaying);
   };
 
-
   const handleVolumeValueChange = (value: unknown) => {
     // console.log(value);
     setVolume(parseFloat(value as string));
@@ -119,7 +193,6 @@ const Footer = () => {
   const handleSeekMouseDown = () => {
     setIsSeeking(true);
   };
-
 
   const handleSeekValueChange = (value: unknown) => {
     setPlayed(parseFloat(value as string));
@@ -137,18 +210,17 @@ const Footer = () => {
     setPlayed(parseFloat(state.played.toString()));
   };
 
+  const handleCurrentLyricsChange = (value: string) => {
+    const currentLyrics = lyrics.find((lyric) => value == lyric.code);
+    console.log(currentLyrics);
+    if (currentLyrics) {
+      setCurrentLyrics(currentLyrics);
+    }
+  };
+
   return (
     <div className={`relative ${!nowPlaying ? "hidden" : ""}`}>
-
-      <div className="fixed inset-x-0 bottom-32 md:bottom-24 left-0 right-0 w-fit">
-      
-      <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setIsHide(!isHide)}
-                    >
-                        {isHide? <ChevronUp className="h-6 w-6" />:<ChevronDown className="h-6 w-6" />}
-                    </Button>
+      <div className="fixed inset-x-0 bottom-32 left-0 right-0 w-fit">
         <div
           className={`${
             isHide ? "hidden" : ""
@@ -184,18 +256,77 @@ const Footer = () => {
           />
         </div>
       </div>
-      <div className="fixed inset-x-0 bottom-0 left-0 right-0 overflow-visible bg-white dark:bg-black border">
+      <div className="fixed inset-x-0 bottom-0 overflow-visible bg-white dark:bg-black border z-20">
         <div className="flex flex-col">
-          <div className="flex items-center justify-center overflow-hidden">
+          <div className="flex items-center justify-between overflow-hidden">
+            <div className="flex justify-self-start">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsHide(!isHide)}
+              >
+                {isHide ? (
+                  <ChevronUp className="h-6 w-6" />
+                ) : (
+                  <ChevronDown className="h-6 w-6" />
+                )}
+              </Button>
+            </div>
             <p
               key={`${nowPlaying?.song_title}-${nowPlaying?.song_artists}`}
               className="md:hidden text-left whitespace-nowrap text-clip scroll-text"
             >
               {nowPlaying?.song_title} - {nowPlaying?.song_artists}
             </p>
-            <p className="hidden md:flex text-center text-balance text-wrap">
-              {nowPlaying?.song_title} - {nowPlaying?.song_artists}
-            </p>
+            {/* <div className="hidden md:flex justify-between items-center text-center text-balance">
+             */}
+            <div className="hidden md:flex justify-center items-center">
+              {!currentLyrics ? (
+                `${nowPlaying?.song_title} - ${nowPlaying?.song_artists}`
+              ) : (
+                <RollingLyrics
+                  lyrics={currentLyrics!.value}
+                  currentTime={currentTime}
+                  height={50}
+                />
+              )}
+            </div>
+            <div className="hidden md:flex justify-self-end-safe">
+              {lyrics && lyrics.length > 0 ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <Button variant="ghost" size="icon">
+                      <Captions className="w-6 h-6" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    {currentLyrics ? (
+                      <FullScreenPlayer
+                        lyrics={currentLyrics!.value}
+                        currentTime={currentTime}
+                      />
+                    ) : (
+                      <></>
+                    )}
+                    <DropdownMenuSeparator />
+                    {lyrics &&
+                      currentLyrics &&
+                      lyrics!.map((lyric) => (
+                        <DropdownMenuItem
+                          onClick={() => handleCurrentLyricsChange(lyric.code)}
+                        >
+                          {currentLyrics.code == lyric.code
+                            ? `> ${lyric.name}`
+                            : `${lyric.name}`}
+                        </DropdownMenuItem>
+                      ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <></>
+              )}
+            </div>
+            {/* </div> */}
           </div>
           <div className="flex flex-row min-h-12 justify-start space-x-2 md:space-x-4 p-2 md:p-4 border items-center">
             <div className="">
@@ -235,12 +366,10 @@ const Footer = () => {
                       size="icon"
                       onClick={handleNextSong}
                     >
-                        <SkipForward className="h-4 w-4" />
+                      <SkipForward className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent className="mb-2">
-                    Next
-                  </TooltipContent>
+                  <TooltipContent className="mb-2">Next</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </div>
@@ -256,12 +385,10 @@ const Footer = () => {
                       size="icon"
                       onClick={handleStopPlaying}
                     >
-                        <Square className="h-4 w-4" />
+                      <Square className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent className="mb-2">
-                    Stop
-                  </TooltipContent>
+                  <TooltipContent className="mb-2">Stop</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </div>
@@ -280,9 +407,7 @@ const Footer = () => {
                       <Shuffle className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent className="mb-2">
-                    Shuffle
-                  </TooltipContent>
+                  <TooltipContent className="mb-2">Shuffle</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </div>
@@ -346,7 +471,7 @@ const Footer = () => {
             </div>
           </div>
           <div className="flex items-center m-2 space-x-2 md:hidden">
-          <span>{convertSecondsToMinutes(currentTime)}</span>
+            <span>{convertSecondsToMinutes(currentTime)}</span>
             <div className="flex-auto">
               <Slider
                 defaultValue={[0]}
@@ -359,7 +484,7 @@ const Footer = () => {
               />
             </div>
             <span>{convertSecondsToMinutes(duration)}</span>
-            </div>
+          </div>
         </div>
       </div>
     </div>

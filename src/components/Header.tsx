@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import NavBar from "./NavBar";
 import { ModeToggle } from "./ModeToggle";
 import { Dialog } from "@headlessui/react";
-import { CircleUser, Menu, X } from "lucide-react";
+import { CircleUser, Menu, Play, X } from "lucide-react";
 import { Button } from "./ui/button";
 import PlaylistSheet from "./PlaylistSheet";
 import { Link } from "react-router-dom";
@@ -30,7 +30,7 @@ const Header = () => {
   const [visible, setVisible] = useState(true);
 
   const { currentUser, logout } = useAuth();
-  const { updateNowPlaying, updatePendingPlaylist } = usePlaylist();
+  const { updateNowPlaying, updatePendingPlaylist, nowPlaying } = usePlaylist();
 
   const handleLogout = () => {
         
@@ -97,7 +97,27 @@ const Header = () => {
           <div className="hidden lg:flex lg:gap-x-12">
             <NavBar />
           </div>
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end space-x-2">
+          <div className="hidden lg:flex lg:flex-1 lg:justify-end space-x-2 items-center min-w-2">
+            {nowPlaying? 
+            <div className="inline-flex items-center justify-center border rounded-md px-4 py-1 mx-8 border-gray-300 border-opacity-70">
+              
+              
+              <div className="flex flex-row space-x-2 justify-between items-center">
+              <div className=""><Play className="h-5 w-5 mr-2"/></div>
+        <div className="flex flex-col">
+            <div className="">{nowPlaying?.song_title}</div>
+            <div className="text-xs text-muted-foreground">{nowPlaying?.song_artists}</div>
+        </div>
+        {/* <div className="">
+            <Button variant="ghost"
+                      size="icon" onClick={() => handleDeleteItem(item)}>
+              <Trash2 className="h-4 w-4"></Trash2></Button></div> */}
+    </div>
+
+
+              {/* <Play className="h-5 w-5 mr-2"/> {nowPlaying?.song_title} - {nowPlaying?.song_artists} */}
+            </div> 
+            : <></>}
             {currentUser ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -203,7 +223,7 @@ const Header = () => {
         </Dialog>
       </header>
 
-      <div className="relative isolate px-6 pt-14 lg:px-8">
+      <div className="relative isolate px-6 pt-8 lg:px-8 -z-10">
         <div
           className="absolute inset-x-0 -top-48 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-96"
           aria-hidden="true"
@@ -216,7 +236,7 @@ const Header = () => {
             }}
           />
         </div>
-        <div className="mx-auto max-w-2xl py-2 sm:py-2 lg:py-4"></div>
+        <div className="mx-auto max-w-2xl "></div>
         <div
           className="absolute inset-x-0 top-[calc(100%-28rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-60rem)]"
           aria-hidden="true"

@@ -24,7 +24,7 @@ const BasicLayout = () => {
               to="opacity-100 translate-y-0 translate-x-0"
               duration={500}
             >
-    <div className="max-w-4xl m-auto pb-32 px-2">
+    <div className="max-w-4xl m-auto pb-8 px-2">
       <Outlet />
       <div className="sticky mt-auto ml-auto max-w-12 bottom-32 right-5 flex flex-row justify-end space-x-2">
 
