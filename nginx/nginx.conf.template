@@ -1,0 +1,54 @@
+worker_processes 1;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include       /etc/nginx/mime.types;
+    default_type  application/octet-stream;
+
+    sendfile        on;
+    keepalive_timeout  65;
+
+    server {
+        listen 3000;
+        server_name localhost;
+
+        root /usr/share/nginx/html;
+        index index.html;
+
+        # Serve static assets correctly
+        location /static/ {
+            try_files $uri $uri/ =404;
+        }
+
+        location /api/ {
+            proxy_pass http://${PROJECT_NAMESPACE}-backend.${PROJECT_NAMESPACE}-${ENVIRONMENT}.svc.cluster.local:8000;  # or whatever your API target is
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+        }
+
+        # All routes handled by React
+        location / {
+            try_files $uri /index.html;
+        }
+
+        # Optional: correct MIME for JS modules
+        location ~ \.m?js$ {
+            add_header Content-Type application/javascript;
+        }
+
+        # Optional: caching
+        location ~* \.(?:ico|css|js|gif|jpe?g|png|woff2?|eot|ttf|svg|otf|webm)$ {
+            expires 6M;
+            access_log off;
+            add_header Cache-Control "public";
+            try_files $uri =404;
+        }
+
+        gzip on;
+        gzip_types text/plain application/javascript application/x-javascript text/javascript text/css application/json;
+        gzip_min_length 256;
+    }
+}

@@ -3,6 +3,7 @@ app:
   image:
   port: 3000
   host:
+  namespace: 
 
 deployment:
   environment: staging
