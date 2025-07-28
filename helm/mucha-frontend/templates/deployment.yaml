@@ -42,18 +42,23 @@ spec:
               value: {{ .Values.app.namespace }}
             - name: ENVIRONMENT
               value: {{ .Values.deployment.environment }}
+          # envFrom:
+          #   - configMapRef:
+          #       name: {{ .Values.app.name }}-{{ .Values.deployment.environment }}-config
+          # volumeMounts:
+          #   - name: {{ .Values.app.name }}-{{ .Values.deployment.environment }}-config-volume
+          #     mountPath: "/.env"
+          #     subPath: .env
+          #     readOnly: true
+          volumeDevices:
+            - name: {{ .Values.app.name }}-{{ .Values.deployment.environment }}-data
+              devicePath: /dev/block/{{ .Values.app.name }}/{{ .Values.deployment.environment }}
       imagePullSecrets:
         - name: my-registry-secret
-{{/*          envFrom:*/}}
-{{/*            - configMapRef:*/}}
-{{/*                name: {{ .Values.app.name }}-{{ .Values.deployment.environment }}-config*/}}
-{{/*          volumeMounts:*/}}
-{{/*            - name: {{ .Values.app.name }}-{{ .Values.deployment.environment }}-config-volume*/}}
-{{/*              mountPath: "/.env"*/}}
-{{/*              subPath: .env*/}}
-{{/*              readOnly: true*/}}
-{{/*      volumes:*/}}
-{{/*        - name: {{ .Values.app.name }}-{{ .Values.deployment.environment }}-config-volume*/}}
-{{/*          configMap:*/}}
-{{/*            name: {{ .Values.app.name }}-{{ .Values.deployment.environment }}-config*/}}
-
+      volumes:
+        # - name: {{ .Values.app.name }}-{{ .Values.deployment.environment }}-config-volume
+        #   configMap:
+        #     name: {{ .Values.app.name }}-{{ .Values.deployment.environment }}-config
+        - name: {{ .Values.app.name }}-{{ .Values.deployment.environment }}-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Namespace }}-pvc
