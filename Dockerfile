@@ -18,11 +18,11 @@ COPY ./nginx/mime.types /etc/nginx/mime.types
 COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
 
 # Example Dockerfile using envsubst
-COPY ./nginx/nginx.conf.template /etc/nginx/templates/nginx.conf.template
+# COPY ./nginx/nginx.conf.template /etc/nginx/templates/nginx.conf.template
 
 COPY --from=build /app/dist /usr/share/nginx/html
 
 EXPOSE 3000
 
-# ENTRYPOINT ["nginx","-g","daemon off;"]
-CMD ["/bin/sh", "-c", "envsubst < /etc/nginx/templates/nginx.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+ENTRYPOINT ["nginx","-g","daemon off;"]
+# CMD ["/bin/sh", "-c", "envsubst < /etc/nginx/templates/nginx.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
