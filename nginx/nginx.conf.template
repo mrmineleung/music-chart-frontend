@@ -11,8 +11,8 @@
             try_files $uri $uri/ =404;
         }
 
-        location /api/ {
-            proxy_pass http://${PROJECT_NAMESPACE}-backend.${PROJECT_NAMESPACE}-${ENVIRONMENT}.svc.cluster.local:8000;  # or whatever your API target is
+        location /api/v1 {
+            proxy_pass {BACKEND_API};  # or whatever your API target is
             proxy_set_header Host $host;
             proxy_set_header X-Real-IP $remote_addr;
         }
