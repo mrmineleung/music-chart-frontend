@@ -37,7 +37,7 @@ spec:
               cpu: "500m"
           env:
             - name: BACKEND_API
-              value: {{ if ne .Values.deployment.environment "prod" }} "https://{{ .Values.deployment.environment }}.{{ .Values.app.host }}/api/v1/" {{ else }} "https://{{ .Values.app.host }}/api/v1/" {{ end }}
+              value: {{ if ne .Values.deployment.environment "prod" }} "http://{{ .Values.deployment.environment }}.{{ .Values.app.host }}/api/v1" {{ else }} "http://{{ .Values.app.host }}/api/v1" {{ end }}
             - name: PROJECT_NAMESPACE
               value: {{ .Values.app.namespace }}
             - name: ENVIRONMENT
