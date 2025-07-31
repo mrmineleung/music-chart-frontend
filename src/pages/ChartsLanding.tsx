@@ -17,6 +17,7 @@ const ChartsLanding = () => {
 
     const fetchAvailableChartData = async () => {
       const GET_CHART_API = `${API_URL}charts`;
+      console.log(GET_CHART_API)
       try {
         const response = await fetch(GET_CHART_API, {
           keepalive: true,
@@ -24,6 +25,7 @@ const ChartsLanding = () => {
             "Content-Type": "application/json",
           },
         });
+        console.log(response)
         const data = await response.json();
         setResponse(data)
         
