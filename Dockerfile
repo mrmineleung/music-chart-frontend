@@ -1,6 +1,6 @@
 FROM node:22.17.1-alpine AS build
 
-ARG REACT_APP_SERVICES_HOST=/api/v1/
+ARG BACKEND_API=/api/v1/
 
 WORKDIR /app
 
