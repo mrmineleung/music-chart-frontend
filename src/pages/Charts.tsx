@@ -133,6 +133,8 @@ const Charts = ({ ...props }: ChartsProps) => {
             "Content-Type": "application/json",
           },
         });
+        console.log(response.ok);
+        console.log(response);
         const data = await response.json();
         setResponse(data);
         setRankingList(data.ranking);

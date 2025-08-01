@@ -42,6 +42,8 @@ const PublicPlaylist = () => {
             "Content-Type": "application/json",
           },
         });
+        console.log(response.ok);
+        console.log(response);
         const data = await response.json();
 
         if (response.status == 200) {
