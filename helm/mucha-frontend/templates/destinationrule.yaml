@@ -6,11 +6,13 @@ metadata:
     app: {{ .Values.app.name }}
     environment: {{ .Values.deployment.environment }}
 spec:
-  host: {{ .Values.app.name }}
+  host: {{ .Values.app.name }}.{{ .Release.Namespace }}.svc.cluster.local
   subsets:
-    - name: blue
+    - name: {{ .Values.app.name }}-blue
       labels:
         color: blue
-    - name: green
+        app: {{ .Values.app.name }}
+    - name: {{ .Values.app.name }}-green
       labels:
         color: green
+        app: {{ .Values.app.name }}
