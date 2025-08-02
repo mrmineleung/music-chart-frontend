@@ -104,8 +104,8 @@ const Header = () => {
               
               <div className="flex flex-row space-x-2 justify-between items-center">
               <div className=""><Play className="h-5 w-5 mr-2"/></div>
-        <div className="flex flex-col">
-            <div className="">{nowPlaying?.song_title}</div>
+        <div className="flex flex-col max-w-48 truncate">
+            <div className="text-base">{nowPlaying?.song_title}</div>
             <div className="text-xs text-muted-foreground">{nowPlaying?.song_artists}</div>
         </div>
         {/* <div className="">

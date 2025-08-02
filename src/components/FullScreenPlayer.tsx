@@ -1,6 +1,7 @@
 
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -43,7 +44,13 @@ const FullScreenPlayer = ({ lyrics, currentTime }: FullScreenPlayerProps) => {
             largeSize={true}
           />
         </div>
-        <DialogFooter></DialogFooter>
+        <DialogFooter className="sm:justify-start ml-8 mt-8 ">
+          <DialogClose asChild>
+            <Button type="button" variant="secondary">
+              Close
+            </Button>
+          </DialogClose>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

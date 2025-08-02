@@ -1,4 +1,5 @@
 import ScrollToTopButton from "@/components/ScrollToTopButton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -42,6 +43,11 @@ const ChartsLanding = () => {
       <h1 className="scroll-m-20 border-b text-4xl font-extrabold tracking-tight lg:text-5xl text-center mb-8">
         Charts
       </h1>
+      {!response?
+      <div key="charts-skeleton" className="grid grid-cols-2 gap-2 content-stretch m-2">
+           <Skeleton className="border rounded-lg h-32" />
+           <Skeleton className="border rounded-lg h-32" />
+      </div> :
       <div key="charts" className="grid grid-cols-2 gap-2 content-stretch m-2">
         {response?.charts.map(chart => 
           <Link key={chart} to={`/charts/${chart.toLowerCase()}`}>
@@ -52,6 +58,7 @@ const ChartsLanding = () => {
           </div></Link>
         )}
       </div>
+      }
 
       <div className="sticky mt-auto ml-auto max-w-12 bottom-28 right-5 flex flex-row justify-end space-x-2">
         <ScrollToTopButton></ScrollToTopButton>

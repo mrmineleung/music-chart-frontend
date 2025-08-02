@@ -6,7 +6,7 @@ import { CaretSortIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { usePlaylist } from "@/provider/PlaylistProvider";
-import { Play } from "lucide-react";
+import { Loader2, Play } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const Ranking = lazy(() => import("@/components/Ranking"));
@@ -133,8 +133,6 @@ const Charts = ({ ...props }: ChartsProps) => {
             "Content-Type": "application/json",
           },
         });
-        console.log(response.ok);
-        console.log(response);
         const data = await response.json();
         setResponse(data);
         setRankingList(data.ranking);
@@ -215,7 +213,9 @@ const Charts = ({ ...props }: ChartsProps) => {
           </div>
         </div>
       )}
-      <Suspense fallback={<>Loading...</>}>
+      <Suspense fallback={<div className="flex justify-center items-center">
+      <Loader2 className="h-16 w-16 animate-spin" />
+        </div>}>
         <Ranking chart={charts} result={filteredRankingList} />
       </Suspense>
     </>

@@ -1,4 +1,5 @@
 import ScrollToTopButton from "@/components/ScrollToTopButton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -71,7 +72,11 @@ const ChartsType = () => {
       <h1 className="scroll-m-20 border-b text-4xl font-extrabold tracking-tight lg:text-5xl text-center mb-8">
         {response?.chart}
       </h1>
-      <div key={response?.chart} className="grid grid-cols-2 gap-2 content-stretch m-2">
+      {!response?
+      <div key="charts-skeleton" className="grid grid-cols-2 gap-2 content-stretch m-2">
+           <Skeleton className="border rounded-lg h-32" />
+           <Skeleton className="border rounded-lg h-32" />
+      </div> : <div key={response?.chart} className="grid grid-cols-2 gap-2 content-stretch m-2">
         {response?.types.map(type => 
           <Link key={type} to={`/charts/${response.chart.toLowerCase()}/types/${type.toLowerCase().replace(' ', '_')}`}>
           <div key={type} className={`border rounded-lg ${bgColorMapping.get(response.chart.toLowerCase())}`}>
@@ -81,6 +86,7 @@ const ChartsType = () => {
           </div></Link>
         )}
       </div>
+      }
 
       <div className="sticky mt-auto ml-auto max-w-12 bottom-28 right-5 flex flex-row justify-end space-x-2">
         <ScrollToTopButton></ScrollToTopButton>
