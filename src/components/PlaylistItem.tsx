@@ -1,8 +1,7 @@
 // import { usePlaylist } from "@/provider/PlaylistProvider"
 import { Trash2 } from "lucide-react"
-import { RankingItemData } from "./RankingItem"
 import { Button } from "./ui/button"
-import { Song } from "@/pages/UserPlaylist"
+import { RankingItemData, Song } from "@/lib/types"
 
 interface PlaylistItemProps {
     item: RankingItemData | Song,

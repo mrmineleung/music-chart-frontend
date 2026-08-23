@@ -10,7 +10,7 @@ deployment:
   version:
   strategy: blue-green
   activeColor: blue
-  replicas: 2
+  replicas: 1
   canaryEnabled: true
   canaryWeights:
     blue: 90

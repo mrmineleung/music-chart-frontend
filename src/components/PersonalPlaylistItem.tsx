@@ -1,16 +1,16 @@
 // import { usePlaylist } from "@/provider/PlaylistProvider"
 import { Trash2 } from "lucide-react"
 import { Button } from "./ui/button"
-import { Song } from "@/pages/UserPlaylist"
+import { Song } from "@/lib/types"
 
-interface PlaylistItemProps {
+interface PersonalPlaylistItemProps {
     item: Song,
     handleDeleteItem : (item: Song) => void
 }
 
 
 
-const PlaylistItem = ({item, handleDeleteItem} : PlaylistItemProps) => {
+const PlaylistItem = ({item, handleDeleteItem} : PersonalPlaylistItemProps) => {
 
   return (
     <div className="flex flex-row space-x-4 border-b justify-between items-center">

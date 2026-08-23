@@ -20,7 +20,11 @@ const ChartsType = () => {
   const params = useParams<ChartsLandingParams>();
   const navigate = useNavigate()
 
-  const bgColorMapping = new Map<string, string>([['melon','bg-gradient-to-r from-sky-500 to-emerald-500'], ['billboard','bg-gradient-to-r from-stone-500 to-neutral-500']])
+  const bgColorMapping = new Map<string, string>([
+    ['melon','bg-gradient-to-r from-sky-500 to-emerald-500'], 
+    ['billboard','bg-gradient-to-r from-stone-500 to-neutral-500'],
+  ['youtube','bg-gradient-to-r from-red-500 to-orange-500']
+])
 
 
   useEffect(() => {
@@ -78,10 +82,10 @@ const ChartsType = () => {
            <Skeleton className="border rounded-lg h-32" />
       </div> : <div key={response?.chart} className="grid grid-cols-2 gap-2 content-stretch m-2">
         {response?.types.map(type => 
-          <Link key={type} to={`/charts/${response.chart.toLowerCase()}/types/${type.toLowerCase().replace(' ', '_')}`}>
+          <Link key={type} to={`/charts/${response.chart.toLowerCase()}/types/${type.toLowerCase().replaceAll(' ', '_')}`}>
           <div key={type} className={`border rounded-lg ${bgColorMapping.get(response.chart.toLowerCase())}`}>
             <div key={type} className="flex justify-center place-items-center rounded-lg h-32 transition-all hover:bg-accent/50 hover:text-accent-foreground duration-500">
-              <span key={type} className="text-2xl md:text-3xl font-extrabold">{type}</span>
+              <span key={type} className="text-2xl md:text-3xl font-extrabold text-center">{type}</span>
             </div>
           </div></Link>
         )}

@@ -1,15 +1,15 @@
 import { Virtuoso } from "react-virtuoso"
 import PersonalPlaylistItem from "./PersonalPlaylistItem"
-import { Playlist, Song } from "@/pages/UserPlaylist"
 import { useAuth } from "@/provider/AuthProvider"
+import { Playlist, Song } from "@/lib/types";
 
 interface PersonalPlaylistProps {
     playlist: Playlist,
-    updatePlaylist: (value: number) => void
+    updatePlaylistItemCount: (value: number) => void
 }
 const API_URL = process.env.BACKEND_API;
 
-const PersonalPlaylist = ({playlist, updatePlaylist}: PersonalPlaylistProps) => {
+const PersonalPlaylist = ({playlist, updatePlaylistItemCount}: PersonalPlaylistProps) => {
     const {accessToken} = useAuth()
 
   const deletePlaylistItem = async (id: string, item: Song) => {
@@ -34,7 +34,7 @@ const PersonalPlaylist = ({playlist, updatePlaylist}: PersonalPlaylistProps) => 
 
       console.log(itemCount)
       console.log(playlist?.items)
-      updatePlaylist(itemCount)
+      updatePlaylistItemCount(itemCount)
     } catch (e) {
       console.error(e);
     }

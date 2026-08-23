@@ -11,7 +11,10 @@ const ChartsLanding = () => {
   const [response, setResponse] = useState<ChartsResponse>()
 
   // const navigate = useNavigate()
-  const bgColorMapping = new Map<string, string>([['melon','bg-gradient-to-r from-sky-500 to-emerald-500'], ['billboard','bg-gradient-to-r from-stone-500 to-neutral-500']])
+  const bgColorMapping = new Map<string, string>([
+    ['melon','bg-gradient-to-r from-sky-500 to-emerald-500'], 
+    ['billboard','bg-gradient-to-r from-stone-500 to-neutral-500'],
+  ['youtube','bg-gradient-to-r from-red-500 to-orange-500']])
 
   useEffect(() => {
     const API_URL = process.env.BACKEND_API;

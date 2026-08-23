@@ -31,11 +31,11 @@ const Home = () => {
         </div>
         </Link>
         {/* <Link to="/charts/youtube"> */}
-        <div className="border rounded-lg bg-gradient-to-r from-red-500 to-orange-500">
+        {/* <div className="border rounded-lg bg-gradient-to-r from-red-500 to-orange-500">
           <div className="flex justify-center place-items-center rounded-lg h-32 transition-all hover:bg-accent/50 hover:text-accent-foreground duration-500">
           <span className="text-3xl font-extrabold">YouTube</span>
           </div>
-        </div>
+        </div> */}
         {/* </Link> */}
       </div>
       </div>

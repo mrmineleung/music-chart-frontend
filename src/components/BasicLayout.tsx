@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import AnimateIn from "./ui/animate-in";
 import ScrollToTopButton from "./ScrollToTopButton";
 import Header from "./Header";
@@ -8,6 +8,8 @@ import { useEffect } from "react";
 
 const BasicLayout = () => {
   const { getCurrentUser } = useAuth();
+  const location = useLocation();
+  const regex = /^\/charts\/[^/]+\/types\/[^/]+$/
   
   useEffect(() => {
     const fetchUser = async () => {
@@ -28,7 +30,7 @@ const BasicLayout = () => {
       <Outlet />
       <div className="sticky mt-auto ml-auto max-w-12 bottom-32 right-5 flex flex-row justify-end space-x-2">
 
-          <ScrollToTopButton></ScrollToTopButton>
+          {regex.test(location.pathname)? <></> : <ScrollToTopButton/>}
         </div>
     </div>
      </AnimateIn>

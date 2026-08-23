@@ -1,12 +1,11 @@
-
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Playlist, Song } from "./UserPlaylist";
 import { Virtuoso } from "react-virtuoso";
 import PublicPlaylistItem from "@/components/PublicPlaylistItem";
 import { usePlaylist } from "@/provider/PlaylistProvider";
 import { Button } from "@/components/ui/button";
 import { Play } from "lucide-react";
+import { Playlist, Song } from "@/lib/types";
 
 type PublicPlaylistParams = {
   playlist_id: string;

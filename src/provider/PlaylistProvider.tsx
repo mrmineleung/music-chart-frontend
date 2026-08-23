@@ -1,7 +1,7 @@
-import { RankingItemData } from "@/components/RankingItem";
 import { createContext, useContext, useState } from "react";
 import CryptoJS from 'crypto-js';
-import { Song } from "@/pages/UserPlaylist";
+import { RankingItemData, Song } from "@/lib/types";
+import { useAuth } from "./AuthProvider";
 
 interface PlaylistProviderProps {
   children: React.ReactNode;
@@ -56,6 +56,8 @@ const PlaylistProviderContext =
 const PlaylistProvider = ({ children }: PlaylistProviderProps) => {
   const API_URL = process.env.BACKEND_API;
   const SECRET_KEY = 'mysecretkey'; 
+
+  const { accessToken } = useAuth()
 
   const encryptData =(name: string,data: unknown)=> {
     const encrypted = CryptoJS.AES.encrypt(JSON.stringify(data), SECRET_KEY).toString();
@@ -126,11 +128,14 @@ const PlaylistProvider = ({ children }: PlaylistProviderProps) => {
   }
 
   const sendAnalytics = (type: string, item_id: string) => {
+    const headers = new Headers()
+    headers.append('Content-Type', 'application/json')
+      if (accessToken) {
+        headers.append('Authorization', `bearer ${accessToken}`)
+      }
     fetch(`${API_URL}analytics/play_history/${type}/${item_id}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: headers,
     });
     
   }

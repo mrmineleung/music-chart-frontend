@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { usePlaylist } from "@/provider/PlaylistProvider";
 import { Loader2, Play } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { RankingItemResponse, RankingResponse } from "@/lib/types";
 
 const Ranking = lazy(() => import("@/components/Ranking"));
 
@@ -16,28 +17,28 @@ interface ChartsProps {
   types?: string;
 }
 
-interface RankingResponse {
-  chart: string;
-  type: string;
-  hour?: string;
-  year?: string;
-  date?: string;
-  ranking: RankingItemResponse[];
-}
+// interface RankingResponse {
+//   chart: string;
+//   type: string;
+//   hour?: string;
+//   year?: string;
+//   date?: string;
+//   ranking: RankingItemResponse[];
+// }
 
-interface RankingItemResponse {
-  album_image: string;
-  album_name: string;
-  rank: string;
-  rank_changes_flow?: string;
-  rank_changes_position?: string;
-  song_artists: string;
-  song_title: string;
-  youtube_video_id: string;
-  youtube_video_title: string;
-  youtube_video_author: string;
-  song_id: string;
-}
+// interface RankingItemResponse {
+//   album_image: string;
+//   album_name: string;
+//   rank: string;
+//   rank_changes_flow?: string;
+//   rank_changes_position?: string;
+//   song_artists: string;
+//   song_title: string;
+//   youtube_video_id: string;
+//   youtube_video_title: string;
+//   youtube_video_author: string;
+//   song_id: string;
+// }
 
 type ChartsParams = {
   charts: string;
@@ -128,7 +129,7 @@ const Charts = ({ ...props }: ChartsProps) => {
       try {
         setIsLoading(true);
         const response = await fetch(GET_CHART_API, {
-          keepalive: true,
+          // keepalive: true,
           headers: {
             "Content-Type": "application/json",
           },
@@ -184,7 +185,7 @@ const Charts = ({ ...props }: ChartsProps) => {
         onChange={(e) => handleSearch(e)}
       /> */}
       {isLoading ? (
-        <></>
+        <>Loading...</>
       ) : (
         <div className="flex flex-row pb-1">
           <div className="flex flex-col md:flex-row md:space-x-2">
@@ -216,7 +217,7 @@ const Charts = ({ ...props }: ChartsProps) => {
       <Suspense fallback={<div className="flex justify-center items-center">
       <Loader2 className="h-16 w-16 animate-spin" />
         </div>}>
-        <Ranking chart={charts} result={filteredRankingList} />
+        <Ranking result={filteredRankingList} />
       </Suspense>
     </>
   );

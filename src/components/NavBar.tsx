@@ -18,40 +18,40 @@ const charts: { title: string; href: string; description: React.ReactNode }[] =
       href: "/charts/melon",
       description: (
         <div className="grid grid-cols-3 gap-1">
-          <Link key="DAY" to="/charts/melon/types/day">
-            <div className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg ">
-              <div className="flex w-full h-full justify-center items-center">
+          <Link key="DAY" to="/charts/melon/types/day" className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg flex w-full h-full justify-center items-center ">
+            {/* <div className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg ">
+              <div className="flex w-full h-full justify-center items-center"> */}
                 DAY
-              </div>
-            </div>
+              {/* </div>
+            </div> */}
           </Link>
-          <Link key="TOP100" to="/charts/melon/types/top100">
-            <div className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg ">
-              <div className="flex w-full h-full justify-center items-center">
+          <Link key="TOP100" to="/charts/melon/types/top100" className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg flex w-full h-full justify-center items-center ">
+            {/* <div className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg ">
+              <div className="flex w-full h-full justify-center items-center"> */}
                 TOP100
-              </div>
-            </div>{" "}
+              {/* </div>
+            </div> */}
           </Link>
-          <Link key="HOT100" to="/charts/melon/types/hot100">
-            <div className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg ">
-              <div className="flex w-full h-full justify-center items-center">
+          <Link key="HOT100" to="/charts/melon/types/hot100" className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg flex w-full h-full justify-center items-center ">
+            {/* <div className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg ">
+              <div className="flex w-full h-full justify-center items-center"> */}
                 HOT100
-              </div>
-            </div>
+              {/* </div>
+            </div> */}
           </Link>
-          <Link key="WEEK" to="/charts/melon/types/week">
-            <div className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg">
-              <div className="flex w-full h-full justify-center items-center">
+          <Link key="WEEK" to="/charts/melon/types/week" className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg flex w-full h-full justify-center items-center ">
+            {/* <div className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg">
+              <div className="flex w-full h-full justify-center items-center"> */}
                 WEEK
-              </div>
-            </div>
+              {/* </div>
+            </div> */}
           </Link>
-          <Link key="MONTH" to="/charts/melon/types/month">
-            <div className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg">
-              <div className="flex w-full h-full justify-center items-center">
+          <Link key="MONTH" to="/charts/melon/types/month" className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg flex w-full h-full justify-center items-center ">
+            {/* <div className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg">
+              <div className="flex w-full h-full justify-center items-center"> */}
                 MONTH
-              </div>
-            </div>
+              {/* </div>
+            </div> */}
           </Link>
         </div>
       ),
@@ -61,57 +61,50 @@ const charts: { title: string; href: string; description: React.ReactNode }[] =
       href: "/charts/billboard",
       description: (
         <div className="grid grid-cols-2 gap-1">
-          <Link key="HOT100" to="/charts/billboard/types/hot100">
-            <div className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg ">
-              <div className="flex w-full h-full justify-center items-center">
+          <Link key="HOT100" to="/charts/billboard/types/hot100" className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg flex w-full h-full justify-center items-center ">
+            {/* <div className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg ">
+              <div className="flex w-full h-full justify-center items-center"> */}
                 HOT100
-              </div>
-            </div>
+              {/* </div>
+            </div> */}
           </Link>
-          <Link key="GLOBAL200" to="/charts/billboard/types/global200">
-            <div className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg">
-              <div className="flex w-full h-full justify-center items-center">
+          <Link key="GLOBAL200" to="/charts/billboard/types/global200" className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg flex w-full h-full justify-center items-center ">
+            {/* <div className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg">
+              <div className="flex w-full h-full justify-center items-center"> */}
                 GLOBAL200
-              </div>
-            </div>
+              {/* </div>
+            </div> */}
           </Link>
-          <Link key="BILLBOARD200" to="/charts/billboard/types/billboard200">
-            <div className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg">
-              <div className="flex w-full h-full justify-center items-center">
+          <Link key="BILLBOARD200" to="/charts/billboard/types/billboard200" className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg flex w-full h-full justify-center items-center ">
+            {/* <div className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg">
+              <div className="flex w-full h-full justify-center items-center"> */}
                 BILLBOARD200
-              </div>
-            </div>
-          </Link>
-          <Link key="TIKTOK TOP50" to="/charts/billboard/types/tiktoktop50">
-            <div className="bg-white dark:bg-black/50 border border-slate-300 rounded-lg">
-              <div className="flex w-full h-full justify-center items-center">
-              TIKTOK TOP50
-              </div>
-            </div>
+              {/* </div>
+            </div> */}
           </Link>
         </div>
       ),
     },
-    {
-      title: "YouTube",
-      href: "#",
-      description: "Coming soon ...",
-    },
-    {
-      title: "Genie",
-      href: "#",
-      description: "Coming soon ...",
-    },
-    {
-      title: "Flo",
-      href: "#",
-      description: "Coming soon ...",
-    },
-    {
-      title: "Bugs",
-      href: "#",
-      description: "Coming soon ...",
-    },
+    // {
+    //   title: "YouTube",
+    //   href: "#",
+    //   description: "Coming soon ...",
+    // },
+    // {
+    //   title: "Genie",
+    //   href: "#",
+    //   description: "Coming soon ...",
+    // },
+    // {
+    //   title: "Flo",
+    //   href: "#",
+    //   description: "Coming soon ...",
+    // },
+    // {
+    //   title: "Bugs",
+    //   href: "#",
+    //   description: "Coming soon ...",
+    // },
   ];
 
 const NavBar = () => {
@@ -134,8 +127,8 @@ const NavBar = () => {
             {/* </Link> */}
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <Link to="/charts">
-              <NavigationMenuTrigger>Charts</NavigationMenuTrigger>
+            {/* <Link to="/charts"> */}
+              <NavigationMenuTrigger><Link to="/charts">Charts</Link></NavigationMenuTrigger>
               <NavigationMenuContent asChild>
                 <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                   {charts.map((chart) => (
@@ -149,7 +142,7 @@ const NavBar = () => {
                   ))}
                 </ul>
               </NavigationMenuContent>
-            </Link>
+            {/* </Link> */}
           </NavigationMenuItem>
           <NavigationMenuItem>
             {/* <Link href="/docs" legacyBehavior passHref> */}
@@ -173,7 +166,7 @@ const ListItem = React.forwardRef<
 >(({ className, id, title, children, ...props }, ref) => {
   return (
     <li>
-      <NavigationMenuLink asChild>
+      {/* <NavigationMenuLink asChild> */}
         {/* <a
           ref={ref}
           className={cn(
@@ -202,7 +195,7 @@ const ListItem = React.forwardRef<
             {children}
           </div>
         </div>
-      </NavigationMenuLink>
+      {/* </NavigationMenuLink> */}
     </li>
   );
 });

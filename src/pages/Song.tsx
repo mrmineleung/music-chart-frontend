@@ -1,5 +1,5 @@
 import { Suspense, lazy, useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 // import { CaretSortIcon } from "@radix-ui/react-icons";
 // import ScrollToTopButton from "@/components/ScrollToTopButton";
 // import Ranking from "@/components/Ranking";
@@ -19,6 +19,7 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { YouTubePlayerType } from "@/components/YouTubePlayer";
+import { RankingItemResponse, RankingResponse } from "@/lib/types";
 
 const YouTubePlayer = lazy(() => import("@/components/YouTubePlayer"));
 
@@ -36,28 +37,28 @@ interface ChartsProps {
   song_id?: string;
 }
 
-interface RankingResponse {
-  chart: string;
-  type: string;
-  hour?: string;
-  year?: string;
-  date?: string;
-  ranking: RankingItemResponse[];
-}
+// interface RankingResponse {
+//   chart: string;
+//   type: string;
+//   hour?: string;
+//   year?: string;
+//   date?: string;
+//   ranking: RankingItemResponse[];
+// }
 
-interface RankingItemResponse {
-  album_image: string;
-  album_name: string;
-  rank: string;
-  rank_changes_flow?: string;
-  rank_changes_position?: string;
-  song_artists: string;
-  song_title: string;
-  youtube_video_id: string;
-  youtube_video_title: string;
-  youtube_video_author: string;
-  song_id: string;
-}
+// interface RankingItemResponse {
+//   album_image: string;
+//   album_name: string;
+//   rank: string;
+//   rank_changes_flow?: string;
+//   rank_changes_position?: string;
+//   song_artists: string;
+//   song_title: string;
+//   youtube_video_id: string;
+//   youtube_video_title: string;
+//   youtube_video_author: string;
+//   song_id: string;
+// }
 
 type ChartsParams = {
   song_id: string;
@@ -77,33 +78,6 @@ const initialResponse = {
   song_id: "",
 };
 
-export const options = {
-  // responsive: true,
-  plugins: {
-    legend: {
-      position: "top" as const,
-    },
-    title: {
-      display: true,
-      text: "Melon DAY Chart",
-    },
-  },
-  interaction: {
-    intersect: false,
-  },
-  scales: {
-    y: {
-      min: 1,
-      // max: 100,
-      reverse: true,
-      ticks: {
-        // forces step size to be 50 units
-        stepSize: 1,
-      },
-    },
-  },
-};
-
 interface ChartDataSet {
   label: string;
   data: number[];
@@ -116,6 +90,8 @@ interface ChartDataSet {
 }
 
 interface ChartData {
+  chart: string;
+  type: string;
   labels: string[];
   datasets: ChartDataSet[];
 }
@@ -134,6 +110,20 @@ interface ChartData {
 
 const Song = ({ ...props }: ChartsProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const previousPathname = location.state?.from; // Use optional chaining for safety
+  console.log(previousPathname)
+
+  const regex = /^\/charts\/([^/]+)\/types\/([^/]+)$/;
+
+  let chart = '', type = ''
+  const match = previousPathname.match(regex);
+  if (match) {
+  chart = match[1]
+  type = match[2]
+  console.log(chart, type)
+}
+
   const [response, setResponse] =
     useState<RankingItemResponse>(initialResponse);
 
@@ -193,7 +183,7 @@ const Song = ({ ...props }: ChartsProps) => {
     const API_URL = process.env.BACKEND_API;
 
     const fetchData = async () => {
-      const GET_SONG_STATS_API = `${API_URL}songs/${song_id}/stats?chart_name=Melon&chart_type=DAY`;
+      const GET_SONG_STATS_API = `${API_URL}songs/${song_id}/stats_v2?chart_name=${chart}&chart_type=${type}`;
       try {
         const response = await fetch(GET_SONG_STATS_API, {
           keepalive: true,
@@ -205,16 +195,26 @@ const Song = ({ ...props }: ChartsProps) => {
         const labels: string[] = [];
         const datas: number[] = [];
 
+        const chart = dataList[0].chart as string
+        const type = dataList[0].type as string
+
+        let song_title = ''
+
         dataList.map((data: RankingResponse) => {
           labels.push(data.date as string);
-          datas.push(parseInt(data.ranking[0].rank) as number);
+          datas.push(data.ranking == null || data.ranking.length == 0 ? 999 : parseInt(data.ranking[0].rank) as number);
+          if (data.ranking != null && data.ranking.length > 0 && song_title == '') {
+            song_title = data.ranking[0].song_title
+          }
         });
 
         const lineChartData = {
+          chart: chart,
+          type: type,
           labels: labels,
           datasets: [
             {
-              label: dataList[0].ranking[0].song_title,
+              label: song_title,
               data: datas,
               borderColor: "rgb(255, 99, 132)",
               backgroundColor: "rgba(255, 99, 132, 0.5)",
@@ -238,8 +238,8 @@ const Song = ({ ...props }: ChartsProps) => {
     <>
       <Button
         variant="link"
-        className="m-0 p-0 place-self-start mb-4"
-        onClick={() => navigate(-1)}
+        className="m-0 p-0 place-self-start mb-4 text-current"
+        onClick={() => navigate(previousPathname)}
       >
         <ChevronLeft className="w-6 h-6" />
         Back
@@ -299,7 +299,32 @@ const Song = ({ ...props }: ChartsProps) => {
         }
       >
         {lineChartData ? (
-          <Line options={options} data={lineChartData} />
+          <Line options={{
+  // responsive: true,
+  plugins: {
+    legend: {
+      position: "top" as const,
+    },
+    title: {
+      display: true,
+      text: `${lineChartData.chart} - ${lineChartData.type}`,
+    },
+  },
+  interaction: {
+    intersect: false,
+  },
+  scales: {
+    y: {
+      min: 1,
+      max: Math.min(Math.max(...lineChartData.datasets[0].data) + 5, 100),
+      reverse: true,
+      ticks: {
+        // forces step size to be 50 units
+        stepSize: 1,
+      },
+    },
+  },
+}} data={lineChartData} />
         ) : (
           <></>
         )}

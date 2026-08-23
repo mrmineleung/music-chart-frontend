@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
-import { Playlist } from "@/pages/UserPlaylist";
 import { Link } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Skeleton } from "./ui/skeleton";
 import "react-lazy-load-image-component/src/effects/blur.css";
+import { Playlist } from "@/lib/types";
 
 interface PlaylistArtworkProps extends React.HTMLAttributes<HTMLDivElement> {
   playlist: Playlist;
@@ -26,6 +26,7 @@ export function PlaylistArtwork({
     <Link to={`/playlists/${playlist.id}`}>
       <div className={cn("space-y-3", className)} {...props}>
         <div className="overflow-hidden rounded-md">
+          <div className="hover:scale-105 transition ease-in-out delay-50 ">
           <LazyLoadImage
             alt={playlist.name}
             height={height}
@@ -40,11 +41,11 @@ export function PlaylistArtwork({
               />
             }
             src={`${API_URL}playlists/thumbnail/${playlist.id}`}
-            className={cn(
-              "object-cover transition-all hover:scale-105",
+            className={cn("object-cover",
               aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"
             )}
           />
+          </div>
           {/* <img
               src={`${API_URL}playlists/thumbnail/${playlist.id}`}
               alt={playlist.name}

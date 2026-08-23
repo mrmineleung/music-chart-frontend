@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import ReactPlayer from "react-player/lazy";
+import ReactPlayer from "react-player";
 import {
   Captions,
   ChevronDown,
@@ -21,7 +21,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import { OnProgressProps } from "react-player/base";
+// import { OnProgressProps } from "react-player";
 import moment from "moment";
 import momentDurationFormatSetup from "moment-duration-format";
 import { usePlaylist } from "@/provider/PlaylistProvider";
@@ -63,7 +63,7 @@ const Footer = () => {
     setIsOpenPlaylist,
   } = usePlaylist();
 
-  const player = useRef<ReactPlayer>(null);
+  const player = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const fetchNextSong = () => {
@@ -92,6 +92,8 @@ const Footer = () => {
               "Content-Type": "application/json",
             },
           });
+          console.log(`fetching lyrics ${nowPlaying?.song_id} ...`)
+          console.log(response)
           const data: LyricsItem[] = await response.json();
           console.log(data);
           setLyrics(data);
@@ -170,7 +172,7 @@ const Footer = () => {
   const handlePlay = () => {
     console.log("onPlay");
     setIsPlaying(true);
-    setDuration(player.current?.getDuration || 0);
+    setDuration(player.current?.duration || 0);
   };
 
   const handlePause = () => {
@@ -195,24 +197,58 @@ const Footer = () => {
   };
 
   const handleSeekValueChange = (value: unknown) => {
+    // console.log(`handleSeekValueChange ${value}`)
     setPlayed(parseFloat(value as string));
   };
 
   const handleSeekMouseUp = () => {
     setIsSeeking(false);
-    player?.current?.seekTo(played);
+    if (player.current) {
+    player.current.currentTime = played * duration
+    }
   };
-  const handleProgress = (state: OnProgressProps) => {
-    setCurrentTime(player.current?.getCurrentTime || 0);
+
+  // const handleProgress = (state: OnProgressProps) => {
+  //   setCurrentTime(player.current?.getCurrentTime || 0);
+  //   if (!isSeeking) {
+  //     setIsSeeking(true);
+  //   }
+  //   setPlayed(parseFloat(state.played.toString()));
+  // };
+
+  const handleProgress = () => {
+    if (!player.current) return;
+    // console.log('handle onProgress')
+    // setCurrentTime(player.current?.currentTime);
+    // if (!isSeeking) {
+    //   setIsSeeking(true);
+    // }
+    // setPlayed(player.current?.currentTime / player.current?.duration);
+  };
+
+  const handleTimeUpdate = () => {
+    // We only want to update time slider if we are not currently seeking
+    if (!player.current) return;
+
+    // console.log('onTimeUpdate', player.current.currentTime);
+
+    if (!player.current.duration) return;
+
+    // setState(prevState => ({
+    //   ...prevState,
+    //   playedSeconds: player.currentTime,
+    //   played: player.currentTime / player.duration,
+    // }));
+    setCurrentTime(player.current?.currentTime);
     if (!isSeeking) {
       setIsSeeking(true);
     }
-    setPlayed(parseFloat(state.played.toString()));
+    setPlayed(player.current?.currentTime / player.current?.duration);
   };
 
   const handleCurrentLyricsChange = (value: string) => {
     const currentLyrics = lyrics.find((lyric) => value == lyric.code);
-    console.log(currentLyrics);
+    // console.log(currentLyrics);
     if (currentLyrics) {
       setCurrentLyrics(currentLyrics);
     }
@@ -231,7 +267,7 @@ const Footer = () => {
             className={`react-player`}
             width="100%"
             height="100%"
-            url={
+            src={
               nowPlaying
                 ? "https://www.youtube.com/watch?v=" +
                   nowPlaying.youtube_video_id
@@ -241,7 +277,7 @@ const Footer = () => {
             volume={volume}
             muted={isMuted}
             onReady={handleReady}
-            // onStart={() => console.log("onStart")}
+            onStart={(e) => console.log("onStart", e)}
             onPlay={handlePlay}
             onPause={handlePause}
             onEnded={handleEnded}
@@ -251,6 +287,7 @@ const Footer = () => {
             // onError={(e) => console.log("onError", e)}
             onError={(e) => handleError(e)}
             onProgress={handleProgress}
+            onTimeUpdate={handleTimeUpdate}
             //   onDuration={this.handleDuration}
             //   onPlaybackQualityChange={e => console.log('onPlaybackQualityChange', e)}
           />
@@ -304,6 +341,7 @@ const Footer = () => {
                       <FullScreenPlayer
                         lyrics={currentLyrics!.value}
                         currentTime={currentTime}
+                        isPlaying={isPlaying}
                       />
                     ) : (
                       <></>
@@ -313,6 +351,7 @@ const Footer = () => {
                       currentLyrics &&
                       lyrics!.map((lyric) => (
                         <DropdownMenuItem
+                        key={lyric.code}
                           onClick={() => handleCurrentLyricsChange(lyric.code)}
                         >
                           {currentLyrics.code == lyric.code

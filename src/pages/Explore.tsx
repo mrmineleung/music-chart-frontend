@@ -1,9 +1,9 @@
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Separator } from "@radix-ui/react-separator";
 import { Suspense, useEffect, useState } from "react";
-import { Playlist } from "./UserPlaylist";
 import { PlaylistArtwork } from "@/components/PlaylistArtwork";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Playlist } from "@/lib/types";
 
 const API_URL = process.env.BACKEND_API;
 const GET_MY_PLAYLIST_API = `${API_URL}playlists`;
@@ -39,6 +39,104 @@ const Explore = () => {
 
     fetchNewCreatedPlaylist();
 
+    // const fetchLatestUpdatedPlaylist = async () => {
+    //   try {
+    //     const response = await fetch(
+    //       `${GET_MY_PLAYLIST_API}/category/new-updated`,
+    //       {
+    //         keepalive: true,
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     );
+
+    //     const data = await response.json();
+
+    //     if (response.status == 200) {
+    //       setLatestUpdatedPlaylist(data);
+    //     }
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // };
+
+    // fetchLatestUpdatedPlaylist();
+
+    // const fetchMelonPlaylist = async () => {
+    //   try {
+    //     const response = await fetch(
+    //       `${GET_MY_PLAYLIST_API}/category/melon`,
+    //       {
+    //         keepalive: true,
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     );
+
+    //     const data = await response.json();
+
+    //     if (response.status == 200) {
+    //       setMelonPlaylist(data);
+    //     }
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // };
+
+    // fetchMelonPlaylist();
+
+    // const fetchBillboardPlaylist = async () => {
+    //   try {
+    //     const response = await fetch(
+    //       `${GET_MY_PLAYLIST_API}/category/billboard`,
+    //       {
+    //         keepalive: true,
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     );
+
+    //     const data = await response.json();
+
+    //     if (response.status == 200) {
+    //       setBillboardPlaylist(data);
+    //     }
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // };
+
+    // fetchBillboardPlaylist();
+  }, []);
+
+  useEffect(() => {
+    // const fetchNewCreatedPlaylist = async () => {
+    //   try {
+    //     const response = await fetch(
+    //       `${GET_MY_PLAYLIST_API}/category/new-created`,
+    //       {
+    //         keepalive: true,
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     );
+
+    //     const data = await response.json();
+
+    //     if (response.status == 200) {
+    //       setNewCreatePlaylist(data);
+    //     }
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // };
+
+    // fetchNewCreatedPlaylist();
+
     const fetchLatestUpdatedPlaylist = async () => {
       try {
         const response = await fetch(
@@ -62,6 +160,104 @@ const Explore = () => {
     };
 
     fetchLatestUpdatedPlaylist();
+
+    // const fetchMelonPlaylist = async () => {
+    //   try {
+    //     const response = await fetch(
+    //       `${GET_MY_PLAYLIST_API}/category/melon`,
+    //       {
+    //         keepalive: true,
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     );
+
+    //     const data = await response.json();
+
+    //     if (response.status == 200) {
+    //       setMelonPlaylist(data);
+    //     }
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // };
+
+    // fetchMelonPlaylist();
+
+    // const fetchBillboardPlaylist = async () => {
+    //   try {
+    //     const response = await fetch(
+    //       `${GET_MY_PLAYLIST_API}/category/billboard`,
+    //       {
+    //         keepalive: true,
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     );
+
+    //     const data = await response.json();
+
+    //     if (response.status == 200) {
+    //       setBillboardPlaylist(data);
+    //     }
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // };
+
+    // fetchBillboardPlaylist();
+  }, []);
+
+  useEffect(() => {
+    // const fetchNewCreatedPlaylist = async () => {
+    //   try {
+    //     const response = await fetch(
+    //       `${GET_MY_PLAYLIST_API}/category/new-created`,
+    //       {
+    //         keepalive: true,
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     );
+
+    //     const data = await response.json();
+
+    //     if (response.status == 200) {
+    //       setNewCreatePlaylist(data);
+    //     }
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // };
+
+    // fetchNewCreatedPlaylist();
+
+    // const fetchLatestUpdatedPlaylist = async () => {
+    //   try {
+    //     const response = await fetch(
+    //       `${GET_MY_PLAYLIST_API}/category/new-updated`,
+    //       {
+    //         keepalive: true,
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     );
+
+    //     const data = await response.json();
+
+    //     if (response.status == 200) {
+    //       setLatestUpdatedPlaylist(data);
+    //     }
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // };
+
+    // fetchLatestUpdatedPlaylist();
 
     const fetchMelonPlaylist = async () => {
       try {
@@ -87,6 +283,104 @@ const Explore = () => {
 
     fetchMelonPlaylist();
 
+    // const fetchBillboardPlaylist = async () => {
+    //   try {
+    //     const response = await fetch(
+    //       `${GET_MY_PLAYLIST_API}/category/billboard`,
+    //       {
+    //         keepalive: true,
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     );
+
+    //     const data = await response.json();
+
+    //     if (response.status == 200) {
+    //       setBillboardPlaylist(data);
+    //     }
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // };
+
+    // fetchBillboardPlaylist();
+  }, []);
+
+  useEffect(() => {
+    // const fetchNewCreatedPlaylist = async () => {
+    //   try {
+    //     const response = await fetch(
+    //       `${GET_MY_PLAYLIST_API}/category/new-created`,
+    //       {
+    //         keepalive: true,
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     );
+
+    //     const data = await response.json();
+
+    //     if (response.status == 200) {
+    //       setNewCreatePlaylist(data);
+    //     }
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // };
+
+    // fetchNewCreatedPlaylist();
+
+    // const fetchLatestUpdatedPlaylist = async () => {
+    //   try {
+    //     const response = await fetch(
+    //       `${GET_MY_PLAYLIST_API}/category/new-updated`,
+    //       {
+    //         keepalive: true,
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     );
+
+    //     const data = await response.json();
+
+    //     if (response.status == 200) {
+    //       setLatestUpdatedPlaylist(data);
+    //     }
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // };
+
+    // fetchLatestUpdatedPlaylist();
+
+    // const fetchMelonPlaylist = async () => {
+    //   try {
+    //     const response = await fetch(
+    //       `${GET_MY_PLAYLIST_API}/category/melon`,
+    //       {
+    //         keepalive: true,
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //       }
+    //     );
+
+    //     const data = await response.json();
+
+    //     if (response.status == 200) {
+    //       setMelonPlaylist(data);
+    //     }
+    //   } catch (e) {
+    //     console.error(e);
+    //   }
+    // };
+
+    // fetchMelonPlaylist();
+
     const fetchBillboardPlaylist = async () => {
       try {
         const response = await fetch(
@@ -111,7 +405,6 @@ const Explore = () => {
 
     fetchBillboardPlaylist();
   }, []);
-
   return (
     <>
       <div className="flex items-center justify-between">

@@ -10,26 +10,18 @@ import {
 } from "./ui/tooltip";
 import { useAuth } from "@/provider/AuthProvider";
 import { useToast } from "./ui/use-toast";
-import { Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 // import { Skeleton } from "./ui/skeleton";
 import "react-lazy-load-image-component/src/effects/blur.css";
+import AddToPlaylistDialog from "./AddToPlaylistDialog";
+import { cn } from "@/lib/utils";
+import { Button } from "./ui/button";
+import { RankingItemData } from "@/lib/types";
 
 
 interface RankingItemProps {
   item: RankingItemData;
-}
-
-export interface RankingItemData {
-  album_image: string;
-  album_name: string;
-  rank: string;
-  rank_changes_flow?: string;
-  rank_changes_position?: string;
-  song_artists: string;
-  song_title: string;
-  youtube_video_id: string;
-  song_id: string;
 }
 
 const RankingItem = ({ item: props }: RankingItemProps) => {
@@ -44,6 +36,13 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
   const API_URL = process.env.BACKEND_API;
 
   const { accessToken, currentUser } = useAuth();
+
+  const navigate = useNavigate();
+      const location = useLocation();
+
+      const handleNavigate = (path: string) => {
+        navigate(path, { state: { from: location.pathname } });
+      };
 
   const fetchMyPlaylist = async () => {
     const GET_MY_PLAYLIST_API = `${API_URL}playlists`;
@@ -160,7 +159,7 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
   return (
     <div className="relative mx-4 my-2 md:my-0 border-b">
 
-      <div className="hidden md:grid md:grid-cols-10 md:justify-items-center md:place-items-center md:m-2">
+      <div className="hidden md:grid md:grid-cols-10 md:justify-items-center md:place-items-center md:m-0">
         <div className="">
           <p className="text-lg md:text-4xl">{props.rank}</p>
         </div>
@@ -230,6 +229,16 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
             ) : (
               <></>
             )}
+            {props.rank_changes_flow == "NEW" ||
+            props.rank_changes_flow == "RE-ENTRY" ? (
+              <>
+                <p className="text-sm text-center ">
+                  {props.rank_changes_flow}
+                </p>
+              </>
+            ) : (
+              <></>
+            )}
           </div>
         </div>
 
@@ -243,24 +252,25 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
           <div className="hover:scale-125 transition ease-in-out delay-50">
           <LazyLoadImage
             alt={props.album_name}
-            height={80}
-            effect="blur"
+            height={60}
+            // effect="blur"
             wrapperProps={{
-              style: { transitionDelay: "1s" },
+              style: { transitionDelay: "0s" },
             }}
             // wrapperClassName="hover:scale-125 rounded-lg shadow-lg transition ease-in-out delay-50"
-            width={80}
-            className="rounded-lg shadow-lg"
+            width={60}
+            // className="rounded-lg shadow-lg"
             // placeholder={<Skeleton className={`h-[80px] w-[80px] rounded-lg`} />}
             src={props.album_image}
+            className={cn("object-cover", "aspect-square", "rounded-lg shadow-lg")}
           />
           </div>
         </div>
 
         <div className="flex justify-self-start items-center justify-center space-x-4 p-4 col-span-3">
-          <div className="flex-1 space-y-3 ">
+          <div className="flex-1 space-y-1">
             <p className="text-left text-lg leading-none">
-              <Link to={`/songs/${props.song_id}`}>{props.song_title}</Link>
+              <Button variant="link" className="!px-0 !py-0 !h-auto !text-current text-base text-wrap text-left" onClick={() => handleNavigate(`/songs/${props.song_id}`)}>{props.song_title}</Button>
             </p>
             <p className="text-left text-sm text-muted-foreground">
               {props.song_artists}
@@ -268,7 +278,7 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
           </div>
         </div>
         <div className="col-span-2">
-          <p className="text-center">{props.album_name}</p>
+          <p className="text-center text-sm">{props.album_name}</p>
         </div>
         <div className="col-span-2">
           <div className="flex items-center space-x-2 my-1">
@@ -305,8 +315,8 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          {/* <PlaylistDialog/> */}
-          <TooltipProvider>
+          <AddToPlaylistDialog item={props}/>
+          {/* <TooltipProvider>
             <Tooltip>
               <TooltipTrigger
                 asChild
@@ -322,7 +332,7 @@ const RankingItem = ({ item: props }: RankingItemProps) => {
                 <p>Save to playlist</p>
               </TooltipContent>
             </Tooltip>
-          </TooltipProvider>
+          </TooltipProvider> */}
           </div>
         </div>
         

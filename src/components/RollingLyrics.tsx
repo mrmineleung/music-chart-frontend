@@ -48,7 +48,7 @@ const RollingLyrics: React.FC<RollingLyricsProps> = ({
   }, [activeIndex]);
 
   return (
-    <div className={`lyrics-container ${height ? `h-[${height}px]` : ``} `}>
+    <div className={`lyrics-container ${height ? `h-[${height}px]` : `h-screen`} `}>
       {lyrics.map((line, index) => (
         <p
           key={`${line.tStartMs}-${index}`}

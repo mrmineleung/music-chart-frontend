@@ -9,12 +9,11 @@ import {
 import PlaylistItem from "./PlaylistItem";
 import { Button } from "./ui/button";
 import { usePlaylist } from "@/provider/PlaylistProvider";
-import { RankingItemData } from "./RankingItem";
 import { DiscAlbum, ListMusic, Play, X } from "lucide-react";
 import { useAuth } from "@/provider/AuthProvider";
 import { json } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { Playlist, Song } from "@/pages/UserPlaylist";
+import { useState } from "react";
+import { Playlist, RankingItemData, Song } from "@/lib/types";
 
 const PlaylistSheet = () => {
   const API_URL = process.env.BACKEND_API;
@@ -80,8 +79,8 @@ const PlaylistSheet = () => {
   const handleRemoveAllPendingPlaylistItem = () => {
     updatePendingPlaylist([]);
   };
-  useEffect(() => {
-    const fetchMyPlaylist = async () => {
+
+  const fetchMyPlaylist = async () => {
       try {
         const response = await fetch(GET_MY_PLAYLIST_API, {
           keepalive: true,
@@ -103,13 +102,11 @@ const PlaylistSheet = () => {
         throw e;
       }
     };
-    fetchMyPlaylist();
-  }, []);
 
   return (
     <Sheet open={isOpenPlaylist} onOpenChange={setIsOpenPlaylist}>
       <SheetTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" onClick={fetchMyPlaylist}>
           <ListMusic className="mr-2 h-4 w-4" />
           Playlist
           {/* <span className="sr-only">Playlist</span> */}
