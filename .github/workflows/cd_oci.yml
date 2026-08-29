@@ -80,7 +80,7 @@ jobs:
             "deployment.version": "${{ github.event.inputs.version }}",
             "deployment.activeColor": "${{ github.event.inputs.color }}",
             "deployment.canaryEnabled": ${{ github.event.inputs.canaryEnabled }},
-            "app.image": "${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY_NAME }}",
+            "app.image": "docker.io/${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPOSITORY_NAME }}",
             "app.host": "${{ secrets.APP_HOST }}"
           }
 
